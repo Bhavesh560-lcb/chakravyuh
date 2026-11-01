@@ -1,9 +1,9 @@
 {
   "name": "ચક્રવ્યુહ – ગુના રજીસ્ટર",
   "short_name": "ચક્રવ્યુહ",
-  "description": "પ્રોહીબીશન તથા ચોરી / ધાડ / લૂંટ ગુના રજીસ્ટર",
+  "description": "પ્રોહીબીશન તથા ચોરી / ધાડ / લૂંટ ગુના રજીસ્ટર, સંપર્ક જાળ અને આરોપીની કડી",
   "lang": "gu",
-  "start_url": "index.html",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
@@ -28,5 +28,14 @@
       "type": "image/png",
       "purpose": "maskable"
     }
-  ]
+  ],
+  "share_target": {
+    "action": "./index.html",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  }
 }
