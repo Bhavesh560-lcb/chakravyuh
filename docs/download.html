@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="gu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ચક્રવ્યુહ — એપ ડાઉનલોડ</title>
+<link rel="icon" type="image/png" href="icon-192.png">
+<style>
+:root{color-scheme:light dark}
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 30%,#8a2410,#2a0a05 70%);font-family:system-ui,"Noto Sans Gujarati",sans-serif;color:#fff;padding:16px;box-sizing:border-box}
+.c{max-width:420px;width:100%;text-align:center}
+img{width:120px;height:120px;border-radius:26px;box-shadow:0 0 40px rgba(245,196,81,.4)}
+h1{margin:14px 0 4px;font-size:34px;color:#ffd77a}
+p{margin:6px 0;line-height:1.6;opacity:.92}
+a.btn{display:block;margin:18px 0 10px;padding:16px;border-radius:14px;background:linear-gradient(135deg,#ffe08a,#f2b134 55%,#c9780f);color:#3a0d04;font-weight:800;font-size:19px;text-decoration:none}
+ol{text-align:left;background:rgba(255,255,255,.1);border-radius:12px;padding:12px 12px 12px 34px;font-size:14px;line-height:1.7}
+small{opacity:.7}
+</style>
+</head>
+<body>
+<div class="c">
+  <img src="icon-512.png" alt="ચક્રવ્યુહ">
+  <h1>ચક્રવ્યુહ</h1>
+  <p>Android એપ ડાઉનલોડ થઈ રહી છે…</p>
+  <a class="btn" id="dl" href="https://github.com/Bhavesh560-lcb/chakravyuh/releases/latest/download/chakravyuh.apk">⬇️ એપ (APK) ડાઉનલોડ કરો</a>
+  <small>ડાઉનલોડ આપમેળે શરૂ ન થાય તો ઉપરનું બટન દબાવો.</small>
+  <ol>
+    <li>ડાઉનલોડ થયેલી <b>chakravyuh.apk</b> ખોલો.</li>
+    <li>"અજાણ્યા સ્રોતમાંથી ઇન્સ્ટોલ" ની પરવાનગી માંગે તો <b>Allow</b> કરો, પછી <b>Install</b> દબાવો.</li>
+    <li>એપ ખોલી SMS ની પરવાનગી આપો, અને પોતાનો યુઝરનેમ-પાસવર્ડ બનાવો.</li>
+    <li>પછી નવું વર્ઝન આવશે ત્યારે એપમાં પોપઅપ આવશે અને ત્યાંથી જ અપડેટ થશે.</li>
+  </ol>
+  <p><small>iPhone / કમ્પ્યુટર માટે: <a href="./" style="color:#ffd77a">વેબ એપ ખોલો</a></small></p>
+</div>
+<script>
+if(/android/i.test(navigator.userAgent)){setTimeout(function(){location.href=document.getElementById('dl').href;},1200);}
+</script>
+</body>
+</html>

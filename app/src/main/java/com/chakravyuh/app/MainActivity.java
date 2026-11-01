@@ -244,6 +244,11 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (pendingApk != null && Build.VERSION.SDK_INT >= 26 && getPackageManager().canRequestPackageInstalls()) {
+            File pf = pendingApk;
+            pendingApk = null;
+            launchInstall(pf);
+        }
         current = this;
         if (pageReady) js("window.onNativeSmsPending&&onNativeSmsPending()");
     }
@@ -300,6 +305,30 @@ public class MainActivity extends Activity {
             }
             fileCb.onReceiveValue(res);
             fileCb = null;
+        }
+    }
+
+    private File pendingApk;
+
+    /** ડાઉનલોડ થયેલી નવી APK ઇન્સ્ટોલ / અપડેટ માટે ખોલો */
+    void launchInstall(File f) {
+        try {
+            if (Build.VERSION.SDK_INT >= 26 && !getPackageManager().canRequestPackageInstalls()) {
+                pendingApk = f;
+                js("window.onApkResult&&window.onApkResult(false,'NEEDPERM')");
+                Intent st = new Intent(android.provider.Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
+                        Uri.parse("package:" + getPackageName()));
+                startActivity(st);
+                return;
+            }
+            Uri u = FileProvider.getUriForFile(this, "com.chakravyuh.app.files", f);
+            Intent it = new Intent(Intent.ACTION_VIEW);
+            it.setDataAndType(u, "application/vnd.android.package-archive");
+            it.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(it);
+            js("window.onApkResult&&window.onApkResult(true,'')");
+        } catch (Exception e) {
+            js("window.onApkResult&&window.onApkResult(false," + JSONObject.quote(String.valueOf(e.getMessage())) + ")");
         }
     }
 
@@ -389,6 +418,45 @@ public class MainActivity extends Activity {
                     });
                 } catch (Exception e) {
                     js("window.onNativeUpdate&&onNativeUpdate(false," + JSONObject.quote(String.valueOf(e.getMessage())) + ")");
+                }
+            }).start();
+        }
+
+        @JavascriptInterface
+        public void installApk(final String url) {
+            if (url == null || !url.startsWith("https://")) return;
+            new Thread(() -> {
+                try {
+                    File dir = new File(getCacheDir(), "share");
+                    if (!dir.exists()) dir.mkdirs();
+                    final File f = new File(dir, "chakravyuh-update.apk");
+                    java.net.HttpURLConnection c = (java.net.HttpURLConnection) new java.net.URL(url).openConnection();
+                    c.setInstanceFollowRedirects(true);
+                    c.setConnectTimeout(20000);
+                    c.setReadTimeout(30000);
+                    int code = c.getResponseCode();
+                    if (code != 200) throw new Exception("HTTP " + code);
+                    long total = c.getContentLength();
+                    try (java.io.InputStream in = c.getInputStream(); FileOutputStream os = new FileOutputStream(f)) {
+                        byte[] buf = new byte[65536];
+                        long done = 0;
+                        int n;
+                        int last = -1;
+                        while ((n = in.read(buf)) > 0) {
+                            os.write(buf, 0, n);
+                            done += n;
+                            if (total > 0) {
+                                int p = (int) (done * 100 / total);
+                                if (p != last) {
+                                    last = p;
+                                    js("window.onApkProgress&&window.onApkProgress(" + p + ")");
+                                }
+                            }
+                        }
+                    }
+                    handler.post(() -> launchInstall(f));
+                } catch (Exception e) {
+                    js("window.onApkResult&&window.onApkResult(false," + JSONObject.quote(String.valueOf(e.getMessage())) + ")");
                 }
             }).start();
         }

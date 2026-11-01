@@ -2,7 +2,7 @@
   "version": 1,
   "force": false,
   "notes": [
-    "ચક્રવ્યુહ — પહેલું વર્ઝન (ફક્ત મોબાઇલ, ઓટો અપડેટ GitHub થી)"
+    "ચક્રવ્યુહ — પહેલું વર્ઝન"
   ],
   "files": [
     "index.html",
@@ -10,5 +10,6 @@
     "version.json"
   ],
   "apkMin": 0,
-  "apkUrl": "https://github.com/Bhavesh560-lcb/chakravyuh/releases/download/apk-latest/chakravyuh.apk"
+  "apkUrl": "https://github.com/Bhavesh560-lcb/chakravyuh/releases/download/apk-latest/chakravyuh.apk",
+  "apk": false
 }

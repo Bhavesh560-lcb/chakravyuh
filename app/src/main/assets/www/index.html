@@ -3529,10 +3529,17 @@ function updModal(v,apk){
   ov.querySelector('#updGo').addEventListener('click',()=>apk?updApk(v):updApply(v));
 }
 function updApk(v){
-  const u=v.apkUrl||'https://github.com/Bhavesh560-lcb/chakravyuh/releases/download/apk-latest/chakravyuh.apk';
+  const u=v.apkUrl||'https://github.com/Bhavesh560-lcb/chakravyuh/releases/latest/download/chakravyuh.apk';
+  const m=document.getElementById('updMsg');
+  if(window.AndroidApp&&AndroidApp.installApk){if(m)m.textContent='⏳ ડાઉનલોડ શરૂ થયું…';const b=document.getElementById('updGo');if(b)b.disabled=true;AndroidApp.installApk(u);return;}
   try{if(window.AndroidApp)AndroidApp.openUrl(u);else window.open(u,'_blank');}catch(_){location.href=u;}
-  const m=document.getElementById('updMsg');if(m)m.textContent='⏳ ડાઉનલોડ શરૂ થયું — પૂરું થાય પછી ઇન્સ્ટોલ કરો';
+  if(m)m.textContent='⏳ ડાઉનલોડ શરૂ થયું — પૂરું થાય પછી ઇન્સ્ટોલ કરો';
 }
+window.onApkProgress=function(p){const m=document.getElementById('updMsg');if(m)m.textContent='⏳ ડાઉનલોડ થાય છે… '+p+'%';};
+window.onApkResult=function(ok,err){const m=document.getElementById('updMsg'),b=document.getElementById('updGo');
+  if(ok){if(m)m.textContent='✅ ઇન્સ્ટોલ સ્ક્રીન ખુલી — "અપડેટ / Install" દબાવો. ડેટા સુરક્ષિત રહેશે.';if(b){b.disabled=false;b.textContent='🔁 ફરી ઇન્સ્ટોલ સ્ક્રીન ખોલો';}return;}
+  if(err==='NEEDPERM'){if(m)m.textContent='⚙️ સેટિંગમાં "આ સ્રોતમાંથી મંજૂરી આપો" ચાલુ કરો, પછી પાછા આવો — ઇન્સ્ટોલ આપમેળે ખુલશે.';return;}
+  if(m)m.textContent='❌ ડાઉનલોડ / ઇન્સ્ટોલ ન થયું: '+(err||'')+' — ઇન્ટરનેટ ચેક કરી ફરી દબાવો';if(b)b.disabled=false;};
 window.onNativeUpdate=function(ok,err){UPD.busy=false;const m=document.getElementById('updMsg');if(!ok&&m)m.textContent='❌ અપડેટ ન થયું: '+(err||'')+' — ઇન્ટરનેટ ચેક કરી ફરી દબાવો';};
 async function updApply(v){
   if(UPD.busy)return;UPD.busy=true;
@@ -3556,6 +3563,7 @@ async function checkUpdate(manual){
   try{if(window.AndroidApp&&AndroidApp.setUpdateInfo)AndroidApp.setUpdateInfo(UPD.base,APP_VERSION);}catch(_){}
   const nv=nativeVer();
   if(window.AndroidApp&&+v.apkMin>0&&nv>0&&nv<+v.apkMin){updModal(v,true);if(document.hidden)updNotify(v);return;}
+  if(v.apk===true&&+v.version>APP_VERSION&&window.AndroidApp&&AndroidApp.installApk){updModal(v,true);if(document.hidden)updNotify(v);return;}
   if(+v.version>APP_VERSION){
     let tried='';try{tried=sessionStorage.getItem('vyuh_upd_try')||'';}catch(_){}
     if(tried===String(v.version)&&!manual){toast('⚠️ સર્વર પર નવું વર્ઝન (v'+v.version+') છે પણ index.html જૂની છે — GitHub માં index.html અને version.json બંને અપલોડ કરો','err',9000);return;}
