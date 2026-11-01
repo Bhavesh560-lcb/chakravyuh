@@ -2366,7 +2366,17 @@ function smsLastUpdateModal(r,only){r=r||{};const W=smsWatched();const nums=only
   ov.addEventListener('click',ev=>{const f=ev.target.closest('[data-luf]');if(f){ov.querySelectorAll('[data-luk]').forEach(d=>d.style.display=!f.dataset.luf||d.dataset.luk===f.dataset.luf?'':'none');return;}});
   if($('#tab-sms').classList.contains('on'))renderSms();}
 window.onSchedSent=()=>{if(!NATIVE)return;let a=[];try{a=JSON.parse(AndroidSMS.takeSentLog()||'[]');}catch(_){}for(const x of a)if(!smsBlocked(x.num))smsLog.push({id:uid(),kind:'sent',num:x.num,at:x.ts,to:x.to,text:x.body,status:x.ok?'sent':'error',auto:true,err:x.err||''});if(a.length){smsSave();}smsReadSchedule();if($('#tab-sms').classList.contains('on'))renderSms();};
-function smsBody(n){const c=smsCfg();const op=c.ops[n]||'other';return (c.tpl[op]||c.tpl.other||'{NUM}').replace(/\{NUM\}/g,n);}
+/* મેસેજ ફોર્મેટ: {NUM} = મોબાઇલ નંબર, {OP} = કંપનીનું નામ (Airtel…), {FIR} = તે નંબરના કેસનો FIR નંબર. દરેક લાઇન અલગ લાઇનમાં જાય છે. */
+const SMS_TPL_DEF='{NUM}\n{OP}\nFir no. {FIR}';
+const OP_SHORT={jio:'Jio',airtel:'Airtel',vi:'Vi',bsnl:'BSNL',other:''};
+let firMap=null,firSig='';
+function firOf(n){const sig=docs.length+'|'+docs.reduce((a,d)=>a+(d.updatedAt||d.addedAt||0),0);
+  if(!firMap||sig!==firSig){firMap=new Map();firSig=sig;
+    for(const d of docs)for(const x of caseRowsOf(d)){const f=String(x.r.fir||'').split('\n')[0].trim();if(!f)continue;
+      for(const g of ['acc','want'])for(const q of (x.r[g]||[]))for(const m of (q.mob||[])){const k=cleanNum(m).replace(/\D/g,'').slice(-10);if(k.length===10&&!firMap.has(k))firMap.set(k,f);}}}
+  return firMap.get(n)||'';}
+function smsBody(n){const c=smsCfg();const op=c.ops[n]||'other';let t=c.tpl[op]||c.tpl.other;if(!t||t==='{NUM}')t=SMS_TPL_DEF;
+  return t.replace(/\{NUM\}/g,n).replace(/\{OP\}/g,OP_SHORT[op]||'').replace(/\{FIR\}/g,firOf(n)).split('\n').map(l=>l.trim()).filter(Boolean).join('\n');}
 function smsTo(n){const c=smsCfg();const op=c.ops[n]||'other';return (c.to[op]||c.to.other||'').replace(/\s/g,'');}
 function smsHref(to,body){const iOS=/iPhone|iPad|iPod/.test(navigator.userAgent);return `sms:${to}${iOS?'&':'?'}body=${encodeURIComponent(body)}`;}
 function smsSendQueue(only){
@@ -2380,7 +2390,7 @@ function smsSendQueue(only){
   let i=0;
   const ov=openModal(`<h2>📩 SMS મોકલો</h2><div id="sqBody"></div>`);
   const draw=()=>{if(i>=list.length){ov.querySelector('#sqBody').innerHTML=`<div class="empty">✅ બધા ${list.length} નંબરના SMS તૈયાર થઈ ગયા.<br>કંપનીનો રિપ્લાય આવે ત્યારે Messages માં રિપ્લાય દબાવી રાખી <b>Share → ચક્રવ્યુહ</b> કરો અથવા નીચે "📥 રિપ્લાય ઉમેરો" માં પેસ્ટ કરો.</div>`;return;}
-    const n=list[i];ov.querySelector('#sqBody').innerHTML=`<div class="muted">${i+1} / ${list.length}</div><div class="occ"><b>પ્રતિ:</b> ${esc(smsTo(n))}<br><b>મેસેજ:</b> ${esc(smsBody(n))}</div>
+    const n=list[i];ov.querySelector('#sqBody').innerHTML=`<div class="muted">${i+1} / ${list.length}</div><div class="occ"><b>પ્રતિ:</b> ${esc(smsTo(n))}<br><b>મેસેજ:</b> <span style="white-space:pre-line;display:inline-block;vertical-align:top">${esc(smsBody(n))}</span></div>
       <div class="row gap"><a class="btn pri" id="sqGo" href="${smsHref(smsTo(n),smsBody(n))}">📤 Messages ખોલો (${n})</a><button class="btn" data-sq="next">આગળ ➜</button><button class="btn" data-sq="skip">છોડો</button></div>
       <p class="muted" style="font-size:12.5px">Messages ખૂલે એટલે <b>Send</b> દબાવી પાછા આ એપમાં આવો અને "આગળ" દબાવો.</p>`;
     ov.querySelector('#sqGo').addEventListener('click',()=>{smsLog.push({id:uid(),kind:'sent',num:n,at:Date.now(),to:smsTo(n),text:smsBody(n)});smsSave();});};
@@ -2468,8 +2478,8 @@ function gjAlert(e){
 function smsSettingsModal(){
   const c=smsCfg();
   const ov=openModal(`<h2>⚙️ કંપનીના SMS નંબર અને મેસેજ ફોર્મેટ</h2>
-    <p class="muted" style="font-size:13px;margin-top:0">તમારી કચેરી / નોડલ અધિકારી તરફથી મળેલ <b>સત્તાવાર</b> નંબર અને ફોર્મેટ જ ભરો. મેસેજમાં <code>{NUM}</code> ની જગ્યાએ આરોપીનો નંબર આપમેળે આવશે.</p>
-    <table><thead><tr><th>કંપની</th><th>SMS કયા નંબર પર મોકલવો</th><th>મેસેજ ફોર્મેટ</th></tr></thead><tbody>${OPS.map(([k,l])=>`<tr><td><b>${l}</b></td><td><input class="inp" data-to="${k}" value="${esc(c.to[k]||'')}" inputmode="tel" style="width:100%"></td><td><input class="inp" data-tpl="${k}" value="${esc(c.tpl[k]||'{NUM}')}" style="width:100%"></td></tr>`).join('')}</tbody></table>
+    <p class="muted" style="font-size:13px;margin-top:0">તમારી કચેરી / નોડલ અધિકારી તરફથી મળેલ <b>સત્તાવાર</b> નંબર અને ફોર્મેટ જ ભરો. મેસેજમાં <code>{NUM}</code> = મોબાઇલ નંબર, <code>{OP}</code> = કંપનીનું નામ (દા.ત. Airtel), <code>{FIR}</code> = તે નંબરના કેસનો FIR નંબર — આપમેળે ભરાશે. દરેક લાઇન અલગ લાઇનમાં જશે.</p>
+    <table><thead><tr><th>કંપની</th><th>SMS કયા નંબર પર મોકલવો</th><th>મેસેજ ફોર્મેટ</th></tr></thead><tbody>${OPS.map(([k,l])=>`<tr><td><b>${l}</b></td><td><input class="inp" data-to="${k}" value="${esc(c.to[k]||'')}" inputmode="tel" style="width:100%"></td><td><textarea class="inp" data-tpl="${k}" rows="3" style="width:100%;min-width:170px;font-family:inherit">${esc((c.tpl[k]&&c.tpl[k]!=='{NUM}')?c.tpl[k]:SMS_TPL_DEF)}</textarea></td></tr>`).join('')}</tbody></table>
     <div class="sec">📥 કંપનીનો રિપ્લાય કયા નંબર / નામ (Sender ID) થી આવે છે</div>
     <p class="muted" style="font-size:12.5px;margin:0 0 4px">દા.ત. <code>JM-JIOINF</code>, <code>AD-AIRTEL</code> અથવા નંબર. અલ્પવિરામથી ઘણા લખી શકાય. Android એપ ફક્ત આ નામ / નંબરથી આવેલા SMS જ વાંચશે — તમારા અંગત SMS નહીં.</p>
     <textarea class="inp" id="smsFrom" rows="2" style="width:100%">${esc(c.from||'')}</textarea>
@@ -2484,7 +2494,7 @@ function smsSettingsModal(){
     if(a==='def'){ov.querySelector('#gjK').value=GJ_KEYS_DEF;ov.querySelector('#gjC').value=GJ_CODES_DEF;return;}
     if(a==='senders'){let L=[];try{L=JSON.parse(AndroidSMS.readSenders(String(Date.now()-864e5))||'[]');}catch(_){}
       ov.querySelector('#sndList').innerHTML=L.length?`<div class="muted" style="font-size:12.5px;margin:6px 0">કંપનીનો રિપ્લાય જે નામથી આવ્યો હોય તેના પર ➕ દબાવો — બીજા (બેંક, અંગત) ઉમેરશો નહીં</div>`+L.map(x=>`<div class="occ" style="display:flex;gap:8px;align-items:center;margin:3px 0"><span style="flex:1"><b>${esc(x.from)}</b> <small class="muted">(${x.n}) ${esc(x.snip||'')}</small></span><button class="btn sm" data-addsnd="${esc(x.from)}">➕</button></div>`).join(''):'<div class="muted">છેલ્લા 24 કલાકમાં કોઈ SMS નથી / મંજૂરી નથી</div>';return;}
-    ov.querySelectorAll('[data-to]').forEach(i=>c.to[i.dataset.to]=i.value.trim());ov.querySelectorAll('[data-tpl]').forEach(i=>c.tpl[i.dataset.tpl]=i.value.trim()||'{NUM}');
+    ov.querySelectorAll('[data-to]').forEach(i=>c.to[i.dataset.to]=i.value.trim());ov.querySelectorAll('[data-tpl]').forEach(i=>c.tpl[i.dataset.tpl]=i.value.trim()||SMS_TPL_DEF);
     c.gjKeys=ov.querySelector('#gjK').value;c.gjCodes=ov.querySelector('#gjC').value;c.from=ov.querySelector('#smsFrom').value.trim();
     const sim=ov.querySelector('#smsSim');if(sim){c.subId=sim.value;c.simName=sim.value?sim.selectedOptions[0].dataset.n:'';c.gapSec=+ov.querySelector('#smsGap').value||5;}
     saveSettings();smsPushNative();smsPushSchedule();ov.close();toast('સેવ થયું','ok');renderSms();});
