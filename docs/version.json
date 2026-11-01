@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "force": false,
+  "notes": [
+    "વ્યૂહરચના — પહેલું વર્ઝન (ફક્ત મોબાઇલ, ઓટો અપડેટ GitHub થી)"
+  ],
+  "files": [
+    "index.html",
+    "config.js",
+    "version.json"
+  ],
+  "apkMin": 0,
+  "apkUrl": "https://github.com/Bhavesh560-lcb/chakravyuh/releases/download/apk-latest/vyuhrachna.apk"
+}
