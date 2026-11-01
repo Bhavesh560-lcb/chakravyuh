@@ -14,7 +14,7 @@
 <script src="lib/pdf.min.js"></script>
 <script src="lib/mammoth.browser.min.js"></script>
 <script src="lib/xlsx.full.min.js"></script>
-<script>try{if(!localStorage.getItem('tk_theme_v2')){localStorage.setItem('tk_theme','clear');localStorage.setItem('tk_theme_v2','1');}}catch(e){}try{var __t=localStorage.getItem('tk_theme')||'clear';var __r=document.documentElement;if(__t==='dark'){__r.dataset.theme='dark'}else{__r.dataset.theme='light';if(__t!=='saffron')__r.dataset.tone=__t}}catch(e){}</script>
+<script>try{if(!localStorage.getItem('cv_theme_v2')){localStorage.setItem('cv_theme','clear');localStorage.setItem('cv_theme_v2','1');}}catch(e){}try{var __t=localStorage.getItem('cv_theme')||'clear';var __r=document.documentElement;if(__t==='dark'){__r.dataset.theme='dark'}else{__r.dataset.theme='light';if(__t!=='saffron')__r.dataset.tone=__t}}catch(e){}</script>
 <style>
 :root{--bg:#f2f4f9;--card:#ffffff;--ink:#15213b;--muted:#64748b;--line:#e3e8f0;--pri:#1d3a8a;--pri2:#2563eb;--acc:#f59e0b;--ok:#059669;--bad:#dc2626;--soft:#eef2ff;--shadow:0 2px 10px rgba(20,33,61,.07)}
 @media (min-width:999999px){:root:not([data-theme="light"]){--bg:#0d1424;--card:#151f35;--ink:#e6ecf7;--muted:#93a3bd;--line:#26324c;--pri:#5b82ea;--pri2:#7aa2ff;--soft:#1c2843;--shadow:0 2px 10px rgba(0,0,0,.35)}}
@@ -1067,7 +1067,7 @@ async function processFile(f,onP){
 
 /* ===================== Storage ===================== */
 const DB={db:null,
-  open(){return new Promise(res=>{try{const r=indexedDB.open('dataMilanDB',2);r.onupgradeneeded=()=>{const d=r.result;for(const st of ['docs','blobs','kv','photos'])if(!d.objectStoreNames.contains(st))d.createObjectStore(st,st==='docs'||st==='photos'?{keyPath:'id'}:undefined);};r.onsuccess=()=>{this.db=r.result;res(true)};r.onerror=()=>res(false);}catch(e){res(false)}})},
+  open(){return new Promise(res=>{try{const r=indexedDB.open('chakravyuhDB',2);r.onupgradeneeded=()=>{const d=r.result;for(const st of ['docs','blobs','kv','photos'])if(!d.objectStoreNames.contains(st))d.createObjectStore(st,st==='docs'||st==='photos'?{keyPath:'id'}:undefined);};r.onsuccess=()=>{this.db=r.result;res(true)};r.onerror=()=>res(false);}catch(e){res(false)}})},
   st(s,m){return this.db.transaction(s,m).objectStore(s)},
   rq(r){return new Promise((res,rej)=>{r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})},
   async all(s){return this.db?this.rq(this.st(s,'readonly').getAll()):[]},
@@ -1292,7 +1292,7 @@ async function handleFiles(list,opt={}){
 /* ===================== Rendering ===================== */
 let navDepth=0;
 function goBack(){if(document.querySelector('.ov')){const o=[...document.querySelectorAll('.ov')].pop();if(o.back&&o.back())return;o.close();return;}if(navDepth>0)history.back();else showTab('dash',true);}
-window.addEventListener('pagehide',()=>{try{const nv=JSON.parse(sessionStorage.getItem('tk_nav')||'null');if(nv){nv.y=window.scrollY;sessionStorage.setItem('tk_nav',JSON.stringify(nv));}}catch(_){}});
+window.addEventListener('pagehide',()=>{try{const nv=JSON.parse(sessionStorage.getItem('cv_nav')||'null');if(nv){nv.y=window.scrollY;sessionStorage.setItem('cv_nav',JSON.stringify(nv));}}catch(_){}});
 /* ===== 🗺️ SMS લોકેશન — નકશા પર રૂટ (બધા નંબર / એક નંબર) ===== */
 let lfP=null;
 function loadLeaflet(){if(window.L&&L.map)return Promise.resolve();if(lfP)return lfP;
@@ -1358,8 +1358,8 @@ async function smsMap(num,opt){opt=opt||{};
   setTimeout(()=>{map.invalidateSize();draw();},120);}
 document.addEventListener('click',e=>{const m=e.target.closest('[data-smap]');if(!m)return;e.preventDefault();e.stopPropagation();smsMap(m.dataset.smap||null);},true);
 /* ===== ઝૂમ: PC માં Ctrl + માઉસ ચકરડી / Ctrl + − 0, મોબાઇલમાં બે આંગળી ===== */
-let appZoom=1;try{appZoom=+localStorage.getItem('tk_zoom')||1;}catch(_){}
-function setZoom(z,show){appZoom=Math.min(2.5,Math.max(0.5,Math.round(z*100)/100));document.body.style.zoom=appZoom===1?'':String(appZoom);try{localStorage.setItem('tk_zoom',String(appZoom));}catch(_){}if(show){let el=document.getElementById('zoomTip');if(!el){el=document.createElement('div');el.id='zoomTip';el.style.cssText='position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:100001;background:#1f2937;color:#fff;padding:6px 14px;border-radius:20px;font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.3)';document.documentElement.appendChild(el);}el.innerHTML=`🔍 ${Math.round(appZoom*100)}% <button style="margin-left:8px;border:0;border-radius:10px;padding:2px 8px;cursor:pointer" onclick="setZoom(1,true)">100%</button>`;el.style.display='';clearTimeout(el._t);el._t=setTimeout(()=>el.style.display='none',2200);}}
+let appZoom=1;try{appZoom=+localStorage.getItem('cv_zoom')||1;}catch(_){}
+function setZoom(z,show){appZoom=Math.min(2.5,Math.max(0.5,Math.round(z*100)/100));document.body.style.zoom=appZoom===1?'':String(appZoom);try{localStorage.setItem('cv_zoom',String(appZoom));}catch(_){}if(show){let el=document.getElementById('zoomTip');if(!el){el=document.createElement('div');el.id='zoomTip';el.style.cssText='position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:100001;background:#1f2937;color:#fff;padding:6px 14px;border-radius:20px;font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.3)';document.documentElement.appendChild(el);}el.innerHTML=`🔍 ${Math.round(appZoom*100)}% <button style="margin-left:8px;border:0;border-radius:10px;padding:2px 8px;cursor:pointer" onclick="setZoom(1,true)">100%</button>`;el.style.display='';clearTimeout(el._t);el._t=setTimeout(()=>el.style.display='none',2200);}}
 window.addEventListener('wheel',e=>{if(!e.ctrlKey||e.target.closest?.('.ngraph'))return;e.preventDefault();setZoom(appZoom*(e.deltaY<0?1.1:1/1.1),true);},{passive:false});
 window.addEventListener('keydown',e=>{if(!(e.ctrlKey||e.metaKey))return;if(e.key==='+'||e.key==='='){e.preventDefault();setZoom(appZoom*1.1,true);}else if(e.key==='-'){e.preventDefault();setZoom(appZoom/1.1,true);}else if(e.key==='0'){e.preventDefault();setZoom(1,true);}});
 /* મોબાઇલ: બે આંગળીથી ઝૂમ (બ્રાઉઝર / એપ બંનેમાં ચાલે તે માટે જાતે) */
@@ -1376,7 +1376,7 @@ function showTab(t,fromPop){
   const cur=document.querySelector('.tab.on')?.id.replace('tab-','');
   if(!fromPop&&cur!==t){try{history.pushState({t,reg:curReg,rd:typeof rdShown!=='undefined'?rdShown:curReg},'');navDepth++;}catch(_){}}
   document.body.classList.toggle('home',t==='dash');if(t==='rdash')rdShown=curReg;
-  try{sessionStorage.setItem('tk_nav',JSON.stringify({t,reg:curReg,rd:rdShown,y:0}));}catch(_){}if(t==='common')markCommonSeen();
+  try{sessionStorage.setItem('cv_nav',JSON.stringify({t,reg:curReg,rd:rdShown,y:0}));}catch(_){}if(t==='common')markCommonSeen();
   try{rescope();updateNavReg();}catch(_){}document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));document.querySelectorAll('.tab').forEach(s=>s.classList.toggle('on',s.id==='tab-'+t));if(t==='cases')renderCases();if(t==='rdash')renderRegDash();if(t==='sms')renderSms();if(t==='common'){lastCommon=buildCommon();renderCommon();}if(t==='net')renderNet();if(t==='others')renderOthers();if(t==='photos')renderPhotos();if(t==='admin')renderAdmin();if(t==='sms'&&window.AndroidSMS&&AndroidSMS.ready()!=='1'){try{AndroidSMS.requestPerms();}catch(_){}}if(t==='data')renderData();if(t==='set')renderSettings();if(t==='watch')renderWatch();}
 function counts(){const c={};for(const g of sindex.values())c[g.type]=(c[g.type]||0)+1;return c;}
 function fileItem(d){const ms=fileMC?(fileMC.get(d.id)||0):[...sindex.values()].filter(g=>g.docs.has(d.id)&&g.docs.size>1).length;const c={};d.entities.forEach(e=>c[e.type]=(c[e.type]||0)+1);
@@ -1388,7 +1388,7 @@ function caseOfOcc(o){const d=docMap.get(o.d);if(!d)return null;const rows=caseR
   if(!row){const v=compact(o.v);row=rows.find(x=>compact(JSON.stringify([x.r.acc,x.r.want])).includes(v))||rows[0];}return row;}
 function personOf(row,v){const c=compact(v);for(const g of ['acc','want'])for(const p of (row.r[g]||[])){if(compact(JSON.stringify(p)).includes(c))return {p,g};}return null;}
 function buildCommon(){
-  const out=[];const seen=+(localStorage.getItem('tk_cm_seen')||0);
+  const out=[];const seen=+(localStorage.getItem('cv_cm_seen')||0);
   for(const g of index.values()){if(!CM_TYPES[g.type])continue;const cases=new Map();
     for(const o of g.occ){const row=caseOfOcc(o);if(!row)continue;const key=row.d.id+'|'+row.unit;if(!cases.has(key))cases.set(key,{row,o,who:personOf(row,o.v)});}
     if(cases.size<2)continue;const L=[...cases.values()];const regs=new Set(L.map(x=>x.row.reg));
@@ -1398,7 +1398,7 @@ function buildCommon(){
   return out;
 }
 function renderCommonBadge(){try{const C=buildCommon();lastCommon=C;const n=C.filter(x=>x.fresh).length;const el=$('#c-common');el.textContent=n?('🆕 '+n):(C.length||'');el.classList.toggle('hot',!!n);}catch(e){console.warn(e);}}
-function markCommonSeen(){setTimeout(()=>{try{localStorage.setItem('tk_cm_seen',String(Date.now()))}catch(_){}renderCommonBadge();},1500);}
+function markCommonSeen(){setTimeout(()=>{try{localStorage.setItem('cv_cm_seen',String(Date.now()))}catch(_){}renderCommonBadge();},1500);}
 let cmShow=60;
 document.addEventListener('click',e=>{if(!e.target.closest('[data-cmmore]'))return;cmShow+=100;renderCommon();});
 function renderCommon(){
@@ -1431,7 +1431,7 @@ const iconStyle=()=>'3';
 function regIcon(k){return `<img class="regico" src="${SHIELD[k]}" alt="">`;}
 let rdShown='prohi';
 function updateNavReg(){const el=$('#regPill');if(el)el.innerHTML=`${regIcon(curReg)} ${esc(REG_DEF[curReg].label)}`;el&&(el.className='regpill rp-'+curReg);}
-function showRegDash(k){rdShown=k;curReg=k;try{localStorage.setItem('tk_reg',k)}catch(_){}rebuildCols();showTab('rdash');window.scrollTo({top:0});}
+function showRegDash(k){rdShown=k;curReg=k;try{localStorage.setItem('cv_reg',k)}catch(_){}rebuildCols();showTab('rdash');window.scrollTo({top:0});}
 function bars(list,color,attr){if(!list.length)return '<div class="empty">હજી માહિતી નથી</div>';const mx=Math.max(...list.map(x=>x[1]));
   return list.map(([l,n,v])=>`<div class="bar" ${attr?`${attr}="${esc(v??l)}"`:''}><span class="bl" title="${esc(l)}">${esc(l)}</span><span class="bt"><i style="width:${Math.max(4,n/mx*100)}%;background:${color}"></i></span><b>${n}</b></div>`).join('');}
 let rdPF='all',rdPSort='cases';
@@ -1496,7 +1496,7 @@ function renderRegDash(){
   $('#rdRecent').innerHTML=rec.length?rec.map(x=>`<div class="fitem" data-rdcase="${esc((x.r.fir||'').split('\n')[0]||x.d.name)}"><div class="ficon">${regIcon(k)}</div><div class="fmain"><b>${esc([x.r.station&&x.r.station+' પો.સ્ટે.',x.r.fir&&'ગુ.ર.નં. '+x.r.fir.split('\n')[0]].filter(Boolean).join(' • ')||x.d.name)}</b><small>${esc(x.r.incDT||x.r.pdate||'')} ${k==='chori'&&x.r.ctype?'• '+esc(x.r.ctype):''} • 👤 ${(x.r.acc||[]).map(p=>p.name).filter(Boolean).slice(0,3).map(esc).join(', ')||'—'}</small></div>${(x.r.want||[]).length?`<span class="tag red">🏃 ${(x.r.want||[]).length} બાકી</span>`:''}${k==='chori'&&x.r.status?`<span class="tag ${/અન/.test(x.r.status)?'warn':'ok'}">${esc(x.r.status)}</span>`:''}</div>`).join(''):'<div class="empty">હજી કોઈ કેસ નથી — 📤 ફાઇલ ઉમેરો અથવા ➕ નવો કેસ</div>';
   try{renderRdExtra(k);}catch(e){console.warn(e);}
 }
-function openReg(k){curReg=k;try{localStorage.setItem('tk_reg',k)}catch(_){}rebuildCols();showTab('cases');}
+function openReg(k){curReg=k;try{localStorage.setItem('cv_reg',k)}catch(_){}rebuildCols();showTab('cases');}
 function renderAll(){
   rescope();renderRegHome();if($('#tab-rdash').classList.contains('on'))renderRegDash();
   const ml=matchList();const c=counts();const SD=sdocs();updateNavReg();renderCommonBadge();if($('#tab-common').classList.contains('on'))renderCommon();
@@ -2145,7 +2145,7 @@ const GJ_POLY=[[68.1,23.55],[68.45,24.05],[68.75,24.3],[69.6,24.3],[70.1,24.25],
 function inGujarat(lat,lon){let inside=false;for(let i=0,j=GJ_POLY.length-1;i<GJ_POLY.length;j=i++){const [xi,yi]=GJ_POLY[i],[xj,yj]=GJ_POLY[j];if(((yi>lat)!==(yj>lat))&&(lon<(xj-xi)*(lat-yi)/(yj-yi)+xi))inside=!inside;}return inside;}
 const GJ_KEYS_DEF='GUJARAT, GUJ, AHMEDABAD, AMRELI, ANAND, ARAVALLI, BANASKANTHA, BHARUCH, BHAVNAGAR, BOTAD, CHHOTA UDAIPUR, CHHOTAUDEPUR, DAHOD, DANG, DWARKA, GANDHINAGAR, GIR SOMNATH, JAMNAGAR, JUNAGADH, KHEDA, KUTCH, KACHCHH, MAHISAGAR, MEHSANA, MORBI, NARMADA, NAVSARI, PANCHMAHAL, GODHRA, PATAN, PORBANDAR, RAJKOT, SABARKANTHA, HIMMATNAGAR, SURAT, SURENDRANAGAR, TAPI, VADODARA, BARODA, VALSAD, VAPI, THARAD, PALANPUR, GONDAL, JETPUR, DHORAJI, UPLETA, JASDAN, BHUJ, GANDHIDHAM, NADIAD, ANKLESHWAR, ગુજરાત, અમદાવાદ, રાજકોટ, સુરત, વડોદરા, જામનગર, જૂનાગઢ, ભાવનગર, મોરબી, ગોંડલ, જેતપુર, ધોરાજી, ઉપલેટા, જસદણ, કચ્છ';
 let smsLog=[],smsSel=new Set(),smsScope='reg',smsQ='',smsLogGJ=false,smsSrc='acc';
-smsSrc='all';try{smsSrc=localStorage.getItem('tk_smssrc')||'all';}catch(_){}if(smsSrc==='sel')smsSrc='all';
+smsSrc='all';try{smsSrc=localStorage.getItem('cv_smssrc')||'all';}catch(_){}if(smsSrc==='sel')smsSrc='all';
 const SMS_EVERY=[[0,'બંધ'],[5,'દર 5 મિનિટ'],[10,'દર 10 મિનિટ'],[15,'દર 15 મિનિટ'],[30,'દર 30 મિનિટ'],[60,'દર 1 કલાક'],[120,'દર 2 કલાક'],[180,'દર 3 કલાક'],[360,'દર 6 કલાક'],[720,'દર 12 કલાક'],[1440,'દર 24 કલાક']];
 const smsOn=()=>smsCfg().enabled!==false;
 const smsCfg=()=>{settings.sms=settings.sms||{};const c=settings.sms;c.to=c.to||{};c.tpl=c.tpl||{};c.gjKeys=c.gjKeys??GJ_KEYS_DEF;c.gjCodes=c.gjCodes||GJ_CODES_DEF;c.ops=c.ops||{};return c;};
@@ -2491,7 +2491,7 @@ function smsSettingsModal(){
 }
 function smsEvents(){
   $('#smsScope').addEventListener('click',e=>{const b=e.target.closest('[data-sc]');if(b){smsScope=b.dataset.sc;renderSms();}});
-  $('#smsSrc').addEventListener('click',e=>{const b=e.target.closest('[data-src]');if(b){smsSrc=b.dataset.src;try{localStorage.setItem('tk_smssrc',smsSrc);}catch(_){}renderSms();}});
+  $('#smsSrc').addEventListener('click',e=>{const b=e.target.closest('[data-src]');if(b){smsSrc=b.dataset.src;try{localStorage.setItem('cv_smssrc',smsSrc);}catch(_){}renderSms();}});
   $('#smsOnOff').onclick=()=>{const c=smsCfg();const on=smsOn();
     if(on&&!confirm('SMS તપાસ બંધ કરવી છે?\n\n• કોઈ SMS મોકલાશે નહીં\n• ⏱️ આપમેળે મોકલવાનું બંધ થશે\n• કંપનીના રિપ્લાય વંચાશે નહીં\n\n(નંબર અને સેટિંગ સચવાયેલા રહેશે — ફરી ચાલુ કરી શકાશે)'))return;
     c.enabled=!on;saveSettings();smsPushNative();smsPushSchedule();renderSms();toast(c.enabled?'🟢 SMS તપાસ ચાલુ':'🔴 SMS તપાસ બંધ',c.enabled?'ok':'');};
@@ -3370,8 +3370,8 @@ function genRecovery(){const a=new Uint8Array(12);if(window.crypto&&crypto.getRa
 const normRc=t=>String(t||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
 async function rcHashOf(code,salt,algo){return lockHash('recovery',normRc(code),salt,algo);}
 async function lockSaveWithRecovery(cfgBase,code){const rsalt=uid()+uid();const algo=cfgBase.algo||lockAlgo();return lockSave({...cfgBase,rsalt,rh:await rcHashOf(code,rsalt,algo)});}
-async function lockLoad(){try{LOCK.cfg=(await DB.get('kv','applock'))||null;}catch(_){LOCK.cfg=null;}if(!LOCK.cfg){try{LOCK.cfg=JSON.parse(localStorage.getItem('tk_applock')||'null');}catch(_){}}return LOCK.cfg;}
-async function lockSave(c){LOCK.cfg=c;await DB.put('kv',c,'applock').catch(()=>{});try{localStorage.setItem('tk_applock',JSON.stringify(c));}catch(_){}}
+async function lockLoad(){try{LOCK.cfg=(await DB.get('kv','applock'))||null;}catch(_){LOCK.cfg=null;}if(!LOCK.cfg){try{LOCK.cfg=JSON.parse(localStorage.getItem('cv_applock')||'null');}catch(_){}}return LOCK.cfg;}
+async function lockSave(c){LOCK.cfg=c;await DB.put('kv',c,'applock').catch(()=>{});try{localStorage.setItem('cv_applock',JSON.stringify(c));}catch(_){}}
 function lockShell(inner){return `<div class="hero-chakra"></div><div class="hero-glow"></div><div class="gate-in"><div class="hero-logo"></div><h1 class="hero-t" style="font-size:clamp(40px,9vw,64px)">ચક્રવ્યુહ</h1><div class="gate-card">${inner}</div><p class="gate-f">🔒 ફક્ત અધિકૃત ઉપયોગ માટે</p></div>`;}
 function showLock(st,msg){const g=$('#authGate');g.classList.remove('hidden');document.body.classList.add('locked');LOCK.open=false;let h='';
   if(st==='loading')h=`<div class="gate-msg">⏳ ખુલી રહ્યું છે…</div>`;
@@ -3391,9 +3391,9 @@ function showLock(st,msg){const g=$('#authGate');g.classList.remove('hidden');do
     <details style="margin-top:10px;font-size:13px"><summary style="cursor:pointer">રિકવરી કોડ પણ નથી?</summary><div class="gate-msg" style="font-size:13px;text-align:left;margin-top:6px">છેલ્લો રસ્તો: નવો પાસવર્ડ બનશે, પણ આ ફોનનો ડેટા એપમાંથી કાઢવો પડશે. કાઢતા પહેલાં બધા ડેટાનો <b>બેકઅપ આપમેળે સેવ થશે</b> (Download/Chakravyuh); નવો પાસવર્ડ બનાવ્યા પછી ⚙️ સેટિંગ → બેકઅપ ઇમ્પોર્ટથી ડેટા પાછો લાવી શકાશે.</div>
     <input class="inp" id="lkDel" placeholder="ખાતરી માટે અહીં  કાઢી નાખો  લખો"><button class="btn danger" data-lk="wipe" style="background:#b91c1c;color:#fff">💾 બેકઅપ લઈ ડેટા કાઢી નવો પાસવર્ડ બનાવો</button></details>${msg?`<div class="gate-err">${esc(msg)}</div>`:''}`;
   g.innerHTML=lockShell(h);const f=g.querySelector('input.inp');if(f)setTimeout(()=>f.focus(),60);}
-function unlockApp(){LOCK.open=true;LOCK.fails=0;$('#authGate').classList.add('hidden');document.body.classList.remove('locked');try{sessionStorage.setItem('tk_open','1');}catch(_){}renderAll();}
-function lockNow(){if(LOGIN_MODE){document.querySelectorAll('.ov').forEach(o=>o.close());try{sessionStorage.removeItem('tk_open');}catch(_){}showOnline('login');return;}document.querySelectorAll('.ov').forEach(o=>o.close());try{sessionStorage.removeItem('tk_open');}catch(_){}showLock('lock');}
-async function lockInit(){if(LOGIN_MODE){$('#syncCard').style.display='none';return onlineInit();}showLock('loading');const c=await lockLoad();if(!c){showLock('setup');return;}let open=false;try{open=sessionStorage.getItem('tk_open')==='1';}catch(_){}if(open)unlockApp();else showLock('lock');}
+function unlockApp(){LOCK.open=true;LOCK.fails=0;$('#authGate').classList.add('hidden');document.body.classList.remove('locked');try{sessionStorage.setItem('cv_open','1');}catch(_){}renderAll();}
+function lockNow(){if(LOGIN_MODE){document.querySelectorAll('.ov').forEach(o=>o.close());try{sessionStorage.removeItem('cv_open');}catch(_){}showOnline('login');return;}document.querySelectorAll('.ov').forEach(o=>o.close());try{sessionStorage.removeItem('cv_open');}catch(_){}showLock('lock');}
+async function lockInit(){if(LOGIN_MODE){$('#syncCard').style.display='none';return onlineInit();}showLock('loading');const c=await lockLoad();if(!c){showLock('setup');return;}let open=false;try{open=sessionStorage.getItem('cv_open')==='1';}catch(_){}if(open)unlockApp();else showLock('lock');}
 document.addEventListener('visibilitychange',()=>{if((!LOCK.cfg&&!LOGIN_MODE)||!LOCK.open)return;if(document.hidden){LOCK.hiddenAt=Date.now();return;}
   const m=LOGIN_MODE?(settings.autoLockMin??5):(LOCK.cfg.autoMin??5);if(m<0||!LOCK.hiddenAt)return;if(Date.now()-LOCK.hiddenAt>=m*60000)lockNow();LOCK.hiddenAt=0;});
 document.addEventListener('click',async e=>{const b=e.target.closest('[data-lk]');if(!b||!b.closest('#authGate'))return;const a=b.dataset.lk;if(a!=='show')e.preventDefault();const v=id=>(document.getElementById(id)?.value||'');
@@ -3416,7 +3416,7 @@ document.addEventListener('click',async e=>{const b=e.target.closest('[data-lk]'
   if(a==='wipe'){if(v('lkDel').trim()!=='કાઢી નાખો'){showLock('forgot','ખાતરી માટે બરાબર "કાઢી નાખો" લખો');return;}
     if(docs.length||PH.m.size||(settings.others||[]).length){const t0=settings.lastAutoBackupAt||0;b.disabled=true;b.textContent='⏳ બેકઅપ બની રહ્યો છે…';await autoBackup(true);if((settings.lastAutoBackupAt||0)===t0){showLock('forgot','બેકઅપ બની શક્યો નહીં — સલામતી માટે ડેટા કાઢ્યો નથી');return;}}
     docs=[];docMap.clear();memBlobs.clear();compactCache.clear();caseCache.clear();for(const s of ['docs','blobs','photos','kv'])await DB.clear(s).catch(()=>{});PH.m.clear();PH.idx=null;
-    try{['tk_applock','tk_open','tk_cm_seen'].forEach(k=>localStorage.removeItem(k));}catch(_){}settings.credReset38=1;settings.autoBackup=true;await DB.put('kv',settings,'settings').catch(()=>{});LOCK.cfg=null;LOCK.fails=0;LOCK.until=0;buildIndex();showLock('setup','આ ડિવાઇસનો ડેટા કાઢી નાખ્યો — નવો યુઝરનેમ અને પાસવર્ડ બનાવો');}});
+    try{['cv_applock','cv_open','cv_cm_seen'].forEach(k=>localStorage.removeItem(k));}catch(_){}settings.credReset38=1;settings.autoBackup=true;await DB.put('kv',settings,'settings').catch(()=>{});LOCK.cfg=null;LOCK.fails=0;LOCK.until=0;buildIndex();showLock('setup','આ ડિવાઇસનો ડેટા કાઢી નાખ્યો — નવો યુઝરનેમ અને પાસવર્ડ બનાવો');}});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.closest&&e.target.closest('#authGate')){const b=document.querySelector('#authGate .btn.pri');if(b&&!b.disabled)b.click();}});
 function lockSettingsHTML(){const c=LOCK.cfg||{};return `<div class="row gap" style="margin-top:0"><label class="muted" style="font-size:13.5px">⏱️ એપ બહાર જાય પછી આપમેળે લૉક: <select class="inp" id="lkAuto">${LOCK_MINS.map(([m,l])=>`<option value="${m}" ${(c.autoMin??5)===m?'selected':''}>${l}</option>`).join('')}</select></label></div>
   <div class="pgrid" style="margin-top:8px"><label class="pf"><span>હાલનું યુઝરનેમ</span><input class="inp" id="lkOldU" autocomplete="username"></label><label class="pf"><span>હાલનો પાસવર્ડ</span><input class="inp" id="lkOld" type="password" autocomplete="current-password"></label><label class="pf"><span>નવું યુઝરનેમ</span><input class="inp" id="lkNU" autocomplete="username" placeholder="એ જ રાખવું હોય તો ફરી લખો"></label><label class="pf"><span>નવો પાસવર્ડ (6+ અક્ષર)</span><input class="inp" id="lkNP" type="password" autocomplete="new-password"></label><label class="pf"><span>નવો પાસવર્ડ ફરી</span><input class="inp" id="lkNP2" type="password" autocomplete="new-password"></label></div>
@@ -3451,19 +3451,19 @@ async function onlineInit(){showOnline('loading');ONL.step='Firebase લાઇ�
   const wd=setTimeout(()=>{if(ONL.first)return;ONL.first=true;console.warn('online init slow at',ONL.step);showOnline('login','⚠️ ધીમું ખૂલ્યું ('+ONL.step+') — ઇમેઇલ પાસવર્ડ લખીને ખોલો. ફરી થાય તો Ctrl+Shift+R દબાવો.');},12000);
   try{await loadFb('app');await loadFb('auth');await loadFb('firestore');ONL.step='Firebase શરૂઆત';fbInitApp(SHARED_CONFIG.firebase);}catch(e){clearTimeout(wd);ONL.first=true;showOnline('error','લાઇબ્રેરી લોડ ન થઈ: '+e.message);return;}
   ONL.step='લૉગિન તપાસ';
-  firebase.auth().onAuthStateChanged(u=>{ONL.user=u;if(ONL.first)return;ONL.first=true;clearTimeout(wd);let open=false;try{open=sessionStorage.getItem('tk_open')==='1';}catch(_){}
+  firebase.auth().onAuthStateChanged(u=>{ONL.user=u;if(ONL.first)return;ONL.first=true;clearTimeout(wd);let open=false;try{open=sessionStorage.getItem('cv_open')==='1';}catch(_){}
     if(u&&open&&u.emailVerified&&ownerOK(u.email)){afterLogin(u);return;}showOnline('login');});}
 async function afterLogin(u){ONL.user=u;if(!ownerOK(u.email)){try{await firebase.auth().signOut();}catch(_){}showOnline('login','આ એપ ફક્ત '+SHARED_CONFIG.owner+' માટે છે');return;}
   if(!u.emailVerified){showOnline('verify');return;}
-  const prev=localStorage.getItem('tk_uid');if(prev&&prev!==u.uid&&docs.length){if(confirm('આ ડિવાઇસમાં બીજા એકાઉન્ટનો ડેટા છે. તેને કાઢીને આ એકાઉન્ટનો ડેટા લાવવો છે?\n(OK = કાઢો, Cancel = તે ડેટા પણ આ એકાઉન્ટમાં ઉમેરો)'))await onlineWipeLocal();}
-  try{localStorage.setItem('tk_uid',u.uid);}catch(_){}
+  const prev=localStorage.getItem('cv_uid');if(prev&&prev!==u.uid&&docs.length){if(confirm('આ ડિવાઇસમાં બીજા એકાઉન્ટનો ડેટા છે. તેને કાઢીને આ એકાઉન્ટનો ડેટા લાવવો છે?\n(OK = કાઢો, Cancel = તે ડેટા પણ આ એકાઉન્ટમાં ઉમેરો)'))await onlineWipeLocal();}
+  try{localStorage.setItem('cv_uid',u.uid);}catch(_){}
   if(settings.syncPhotos===undefined){settings.syncPhotos=true;DB.put('kv',settings,'settings').catch(()=>{});}
   unlockApp();SHARED_CONFIG.team=u.uid;if(!SYNC.on)syncStart().then(ok=>{if(ok)toast('🌐 ઓનલાઇન — બધો ડેટા આ એકાઉન્ટમાં સેવ થાય છે','ok',3500);});}
 async function onlineWipeLocal(){syncStop();docs=[];docMap.clear();memBlobs.clear();compactCache.clear();caseCache.clear();for(const s of ['docs','blobs','photos'])await DB.clear(s).catch(()=>{});PH.m.clear();PH.idx=null;settings.others=[];buildIndex();}
 async function saveOfflineHash(email,pass){try{const salt=uid()+uid();const algo=lockAlgo();const c={email:String(email).toLowerCase().trim(),salt,algo,h:await lockHash(email,pass,salt,algo)};await DB.put('kv',c,'onlock');}catch(_){}}
 async function checkOfflineHash(email,pass){try{const c=await DB.get('kv','onlock');if(!c||c.email!==String(email).toLowerCase().trim())return false;return (await lockHash(email,pass,c.salt,c.algo))===c.h;}catch(_){return false;}}
 async function onlineLogout(){if(!confirm('લૉગઆઉટ કરવું છે?'))return;const wipe=confirm('આ ડિવાઇસમાંથી ડેટાની કૉપી પણ કાઢી નાખવી છે?\n(ઓનલાઇન ડેટા સુરક્ષિત રહેશે; બીજાનો ફોન / કમ્પ્યુટર હોય તો OK દબાવો)');
-  syncStop();if(wipe){await onlineWipeLocal();await DB.del('kv','onlock').catch(()=>{});}try{sessionStorage.removeItem('tk_open');}catch(_){}try{await firebase.auth().signOut();}catch(_){}document.querySelectorAll('.ov').forEach(o=>o.close());showOnline('login');}
+  syncStop();if(wipe){await onlineWipeLocal();await DB.del('kv','onlock').catch(()=>{});}try{sessionStorage.removeItem('cv_open');}catch(_){}try{await firebase.auth().signOut();}catch(_){}document.querySelectorAll('.ov').forEach(o=>o.close());showOnline('login');}
 document.addEventListener('click',async e=>{const b=e.target.closest('[data-ol]');if(!b||!b.closest('#authGate'))return;const a=b.dataset.ol;if(a!=='show')e.preventDefault();const v=id=>(document.getElementById(id)?.value||'');
   if(a==='show'){$('#authGate').querySelectorAll('input[type=password],input[data-pw]').forEach(i=>{i.type=b.checked?'text':'password';i.dataset.pw=1;});return;}
   if(ONL.busy)return;ONL.busy=true;const lab=b.textContent;
@@ -3667,7 +3667,7 @@ $('#caseTable').addEventListener('click',e=>{
   const dc=e.target.closest('[data-delc]');if(dc){e.stopPropagation();deleteCase(dc.dataset.delc);return;}
   const td=e.target.closest('[data-cell]');if(td){e.stopPropagation();editCaseCell(td.dataset.cell,td.dataset.col,td.dataset.pi!=null?+td.dataset.pi:null);}});
 $('#cRoutes').addEventListener('click',e=>{const c=e.target.closest('[data-rq]');if(c){$('#cSearch').value=c.dataset.rq;renderCases();}});
-$('#regTabs').addEventListener('click',e=>{const b=e.target.closest('[data-reg]');if(!b||b.dataset.reg===curReg)return;curReg=b.dataset.reg;try{localStorage.setItem('tk_reg',curReg)}catch(_){}rebuildCols();renderCases();});
+$('#regTabs').addEventListener('click',e=>{const b=e.target.closest('[data-reg]');if(!b||b.dataset.reg===curReg)return;curReg=b.dataset.reg;try{localStorage.setItem('cv_reg',curReg)}catch(_){}rebuildCols();renderCases();});
 $('#cStats').addEventListener('click',e=>{const b=e.target.closest('[data-plist]');if(b)showPeople(b.dataset.plist);});
 $('#cYears').addEventListener('click',e=>{const y=e.target.closest('[data-year]');if(y){const v=y.dataset.year;$('#cFrom').value=v?v+'-01-01':'';$('#cTo').value=v?v+'-12-31':'';renderCases();return;}
   const l=e.target.closest('[data-law]');if(l){if(l.dataset.law==='ipc'){$('#cFrom').value='';$('#cTo').value='2024-06-30';}else{$('#cFrom').value='2024-07-01';$('#cTo').value='';}renderCases();}});
@@ -3760,8 +3760,8 @@ $('#bClear').onclick=async()=>{if(!confirm('બધી ફાઇલો અને 
 
 /* ===================== Init ===================== */
 const THEMES=[['clear','☀️ આછો સફેદ (મૂળ)','linear-gradient(135deg,#ffffff 50%,#1d8ce0 50%)'],['saffron','🟠 કેસરી','linear-gradient(135deg,#f6f0e4 50%,#c2410c 50%)'],['sky','🔵 આકાશી','linear-gradient(135deg,#eef5fc 50%,#2563eb 50%)'],['mint','🟢 હરિયાળી','linear-gradient(135deg,#edf8f2 50%,#059669 50%)'],['rose','🌸 ગુલાબી','linear-gradient(135deg,#fdf0f4 50%,#e11d48 50%)'],['lavender','🟣 જાંબલી','linear-gradient(135deg,#f4f1fc 50%,#7c3aed 50%)'],['dark','🌙 ડાર્ક (રાત્રિ)','linear-gradient(135deg,#0b0d16 50%,#f0b429 50%)']];
-function applyTheme(v){const r=document.documentElement;if(v==='dark'){r.dataset.theme='dark';delete r.dataset.tone;}else{r.dataset.theme='light';if(v==='saffron')delete r.dataset.tone;else r.dataset.tone=v;}try{localStorage.setItem('tk_theme',v)}catch(_){}}
-function themePicker(btn){document.querySelectorAll('.thpop').forEach(x=>x.remove());let cur='clear';try{cur=localStorage.getItem('tk_theme')||'clear'}catch(_){}
+function applyTheme(v){const r=document.documentElement;if(v==='dark'){r.dataset.theme='dark';delete r.dataset.tone;}else{r.dataset.theme='light';if(v==='saffron')delete r.dataset.tone;else r.dataset.tone=v;}try{localStorage.setItem('cv_theme',v)}catch(_){}}
+function themePicker(btn){document.querySelectorAll('.thpop').forEach(x=>x.remove());let cur='clear';try{cur=localStorage.getItem('cv_theme')||'clear'}catch(_){}
   const p=document.createElement('div');p.className='thpop';p.innerHTML='<h4>🎨 થીમ પસંદ કરો</h4><div class="thgrid">'+THEMES.map(([k,l,sw])=>`<button class="thopt ${k===cur?'on':''}" data-th="${k}"><span class="thsw" style="background:${sw}"></span>${l}</button>`).join('')+'</div>';
   document.body.appendChild(p);
   /* ઝૂમ હોય તો પણ થીમનું ખાનું આખું સ્ક્રીનમાં જ દેખાય (body ના zoom પ્રમાણે ગણતરી) */
@@ -3769,7 +3769,7 @@ function themePicker(btn){document.querySelectorAll('.thpop').forEach(x=>x.remov
   const b=btn.getBoundingClientRect(),vw=p.offsetWidth*z,vh=p.offsetHeight*z;
   const top=Math.max(8,Math.min(b.bottom+6,innerHeight-vh-8)),left=Math.max(8,Math.min(b.right-vw,innerWidth-vw-8));
   p.style.top=(top/z)+'px';p.style.left=(left/z)+'px';
-  p.addEventListener('click',e=>{const ic=e.target.closest('[data-ic]');if(ic){try{localStorage.setItem('tk_icon',ic.dataset.ic)}catch(_){}p.querySelectorAll('.icopt').forEach(x=>x.classList.toggle('on',x===ic));renderAll();if($('#tab-rdash').classList.contains('on'))renderRegDash();toast('ચિહ્ન બદલાયું: '+ic.title,'ok',2000);return;}
+  p.addEventListener('click',e=>{const ic=e.target.closest('[data-ic]');if(ic){try{localStorage.setItem('cv_icon',ic.dataset.ic)}catch(_){}p.querySelectorAll('.icopt').forEach(x=>x.classList.toggle('on',x===ic));renderAll();if($('#tab-rdash').classList.contains('on'))renderRegDash();toast('ચિહ્ન બદલાયું: '+ic.title,'ok',2000);return;}
     const o=e.target.closest('[data-th]');if(!o)return;applyTheme(o.dataset.th);p.querySelectorAll('.thopt').forEach(x=>x.classList.toggle('on',x===o));toast('થીમ બદલાઈ: '+o.textContent.trim(),'ok',1800);});
   setTimeout(()=>document.addEventListener('click',function h(e){if(!p.contains(e.target)&&e.target!==btn){p.remove();document.removeEventListener('click',h);}}),0);}
 $('#btnTheme').onclick=e=>{e.stopPropagation();themePicker(e.currentTarget);};$('#btnTheme2').onclick=e=>{e.stopPropagation();themePicker(e.currentTarget);};
@@ -3784,15 +3784,15 @@ document.body.classList.add('home');
   if(!ok)toast('⚠️ આ બ્રાઉઝરમાં કાયમી સ્ટોરેજ ચાલુ નથી — પેજ બંધ થતાં ડેટા જશે. Chrome/Edge વાપરો.','err',8000);
   try{const s=await DB.get('kv','settings');if(s)settings={...settings,...s};}catch(e){}
   /* નવા વર્ઝન (v38) પર એક વાર: જુનો યુઝરનેમ-પાસવર્ડ કાઢી નાખો → નવો બનાવવાની સ્ક્રીન આવશે (ડેટા રહેશે) */
-  try{if(!settings.credReset38){await DB.del('kv','applock').catch(()=>{});await DB.del('kv','onlock').catch(()=>{});try{['tk_applock','tk_uid'].forEach(k=>localStorage.removeItem(k));sessionStorage.removeItem('tk_open');}catch(_){}settings.credReset38=1;await DB.put('kv',settings,'settings').catch(()=>{});}}catch(e){console.warn(e);}
+  try{if(!settings.credReset38){await DB.del('kv','applock').catch(()=>{});await DB.del('kv','onlock').catch(()=>{});try{['cv_applock','cv_uid'].forEach(k=>localStorage.removeItem(k));sessionStorage.removeItem('cv_open');}catch(_){}settings.credReset38=1;await DB.put('kv',settings,'settings').catch(()=>{});}}catch(e){console.warn(e);}
   try{dedupeOthers();}catch(e){console.warn(e);}
-  try{const r=localStorage.getItem('tk_reg');if(REG_DEF[r])curReg=r;}catch(_){}
+  try{const r=localStorage.getItem('cv_reg');if(REG_DEF[r])curReg=r;}catch(_){}
   rebuildCols();
   docs=await DB.all('docs').catch(()=>[]);docs.forEach(d=>docMap.set(d.id,d));settings.ignore=uniq((settings.ignore||[]).map(k=>/^aadhaar\|91[6-9]\d{9}$/.test(k)?'phone|'+k.slice(10):k));
   for(const d of docs)if((d.entities||[]).some(e=>e.type==='aadhaar'&&/^91[6-9]\d{9}$/.test(e.key))){try{extractDoc(d);await DB.put('docs',d);}catch(_){}}await phLoad();
   buildIndex();renderAll();
   /* રીફ્રેશ પછી જે પેજ પર હતા ત્યાં જ પાછા */
-  try{const nv=JSON.parse(sessionStorage.getItem('tk_nav')||'null');if(nv&&nv.t&&nv.t!=='dash'&&document.getElementById('tab-'+nv.t)){
+  try{const nv=JSON.parse(sessionStorage.getItem('cv_nav')||'null');if(nv&&nv.t&&nv.t!=='dash'&&document.getElementById('tab-'+nv.t)){
     if(REG_DEF[nv.reg]){curReg=nv.reg;rebuildCols();}if(nv.t==='rdash'&&REG_DEF[nv.rd])curReg=nv.rd;
     showTab(nv.t,true);try{history.replaceState({t:nv.t,reg:curReg,rd:rdShown},'');}catch(_){}
     if(nv.y)setTimeout(()=>window.scrollTo(0,nv.y),300);}}catch(e){console.warn('nav restore',e);}
