@@ -74,7 +74,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.vyuhrachna.app.files"
+            android:authorities="com.chakravyuh.app.files"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

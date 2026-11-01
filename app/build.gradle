@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.vyuhrachna.app'
+    namespace 'com.chakravyuh.app'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.vyuhrachna.app"
+        applicationId "com.chakravyuh.app"
         minSdk 24
         targetSdk 34
         // દર વખતે મોટો નંબર (મિનિટ મુજબ) — જૂની એપ પર "App not installed" (નીચું વર્ઝન) ન આવે
@@ -18,7 +18,7 @@ android {
     // એક જ કાયમી સહી — જેથી નવું APK જૂની એપ પર સીધું અપડેટ થાય (ડેટા રહે)
     signingConfigs {
         fixed {
-            storeFile file("vyuhrachna.jks")
+            storeFile file("chakravyuh.jks")
             storePassword "8a2c157d162801c1b328fdb2"
             keyAlias "vyuhrachna"
             keyPassword "8a2c157d162801c1b328fdb2"

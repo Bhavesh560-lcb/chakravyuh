@@ -1,5 +1,5 @@
-// વ્યૂહરચના – ઓફલાઇન કેશ (નવું વર્ઝન મૂકો ત્યારે v નંબર વધારવો)
-const CACHE='vyuhrachna-v8';
+// ચક્રવ્યુહ – ઓફલાઇન કેશ (નવું વર્ઝન મૂકો ત્યારે v નંબર વધારવો)
+const CACHE='chakravyuh-v8';
 const SHELL=['./','./index.html','./config.js','./manifest.json','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./apple-touch-icon.png',
   './lib/pdf.min.js','./lib/pdf.worker.min.js','./lib/xlsx.full.min.js','./lib/mammoth.browser.min.js','./lib/html2canvas.min.js','./lib/jspdf.umd.min.js','./lib/leaflet.js','./lib/leaflet.css'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()));});
