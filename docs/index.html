@@ -565,16 +565,7 @@ body.locked{overflow:hidden}
   <div class="grid2">
     <div class="card"><h3>⚙️ સેટિંગ</h3><div id="setList"></div></div>
     <div class="card"><h3>💾 બેકઅપ</h3>
-      <div class="row gap"><label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="abOn"> 🌙 ઓટો બેકઅપ — રોજ રાત્રે ૧૨:૦૦ વાગ્યે</label><button class="btn" id="abNow">💾 હમણાં ઓટો બેકઅપ</button></div>
-      <p class="muted" id="abInfo" style="font-size:13px"></p>
-      <div class="row gap"><button class="btn" id="bExp">⬇️ બેકઅપ (JSON) ડાઉનલોડ</button></div>
-      <div style="border:1px dashed var(--line,#bbb);border-radius:10px;padding:8px;margin:8px 0">
-        <b>📱 બીજા ફોનનો ડેટા ઉમેરો</b>
-        <p class="muted" style="font-size:12.5px;margin:4px 0">બીજા ફોનના બેકઅપ (JSON) ફાઇલો પસંદ કરો. તમારો યુઝરનેમ-પાસવર્ડ એ જ રહેશે; બીજા ફોનનો ડેટા તમારા ડેટામાં ઉમેરાશે અને ફાઇલ યાદીમાં "📱 ફોનનું નામ" સાથે દેખાશે.</p>
-        <input class="inp" id="bImpLabel" placeholder="ફોનનું નામ / વ્યક્તિ (દા.ત. રાજેશનો ફોન) — ખાલી હોય તો ફાઇલનું નામ" style="width:100%;margin-bottom:6px">
-        <label class="btn">⬆️ બીજા ફોનનો બેકઅપ ઇમ્પોર્ટ<input type="file" id="bImp" accept=".json" multiple hidden></label>
-        <div id="impList" style="margin-top:8px"></div>
-      </div>
+      <div class="row gap"><button class="btn" id="bExp">⬇️ બેકઅપ (JSON) ડાઉનલોડ</button><label class="btn">⬆️ બેકઅપ ઇમ્પોર્ટ<input type="file" id="bImp" accept=".json" hidden></label></div>
       <div class="row gap"><button class="btn" id="bXls2">📊 બધો ડેટા Excel માં</button></div>
       <p class="muted" style="font-size:13px">બ્રાઉઝરનો ડેટા (History/Cache) ક્લિયર કરશો તો ડેટા જતો રહેશે, એટલે સમયાંતરે બેકઅપ લેતા રહો. બેકઅપમાં મૂળ ફાઇલો નથી આવતી, ફક્ત નીકળેલ લખાણ અને માહિતી આવે છે.</p>
       <div class="row gap"><button class="btn danger" id="bClear">🗑️ બધો ડેટા કાઢી નાખો</button></div>
@@ -1380,7 +1371,7 @@ function showTab(t,fromPop){
   try{rescope();updateNavReg();}catch(_){}document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));document.querySelectorAll('.tab').forEach(s=>s.classList.toggle('on',s.id==='tab-'+t));if(t==='cases')renderCases();if(t==='rdash')renderRegDash();if(t==='sms')renderSms();if(t==='common'){lastCommon=buildCommon();renderCommon();}if(t==='net')renderNet();if(t==='others')renderOthers();if(t==='photos')renderPhotos();if(t==='admin')renderAdmin();if(t==='sms'&&window.AndroidSMS&&AndroidSMS.ready()!=='1'){try{AndroidSMS.requestPerms();}catch(_){}}if(t==='data')renderData();if(t==='set')renderSettings();if(t==='watch')renderWatch();}
 function counts(){const c={};for(const g of sindex.values())c[g.type]=(c[g.type]||0)+1;return c;}
 function fileItem(d){const ms=fileMC?(fileMC.get(d.id)||0):[...sindex.values()].filter(g=>g.docs.has(d.id)&&g.docs.size>1).length;const c={};d.entities.forEach(e=>c[e.type]=(c[e.type]||0)+1);
-  return `<div class="fitem" data-doc="${d.id}"><div class="ficon">${fileIcon(d.ext)}</div><div class="fmain"><b>${esc(d.name)}</b><small>${fmtDate(d.addedAt)} • ${fmtSize(d.size||0)}</small><div>${TYPE_ORDER.filter(t=>c[t]).map(t=>`<span class="tag">${TYPES[t].icon} ${c[t]}</span>`).join('')}${d.srcPhone?`<span class="tag" style="background:#ede9fe;color:#5b21b6">📱 ${esc(d.srcPhone)}</span>`:''}${d.garbled?'<span class="tag warn">⚠️ OCR જરૂરી</span>':''}${d.method==='ocr'?'<span class="tag ok">OCR</span>':''}</div></div>${ms?`<span class="tag red">🔗 ${ms} મેચ</span>`:''}</div>`;}
+  return `<div class="fitem" data-doc="${d.id}"><div class="ficon">${fileIcon(d.ext)}</div><div class="fmain"><b>${esc(d.name)}</b><small>${fmtDate(d.addedAt)} • ${fmtSize(d.size||0)}</small><div>${TYPE_ORDER.filter(t=>c[t]).map(t=>`<span class="tag">${TYPES[t].icon} ${c[t]}</span>`).join('')}${d.garbled?'<span class="tag warn">⚠️ OCR જરૂરી</span>':''}${d.method==='ocr'?'<span class="tag ok">OCR</span>':''}</div></div>${ms?`<span class="tag red">🔗 ${ms} મેચ</span>`:''}</div>`;}
 let pendingReg=null,cmType='all',lastCommon=[];
 const CM_TYPES={phone:'📱 મોબાઇલ',imei:'📟 IMEI',name:'👤 નામ',vehicle:'🚗 વાહન',email:'✉️ જીમેઇલ',custom:'🌐 સોશિયલ / અન્ય',aadhaar:'🪪 આધાર',pan:'💳 PAN'};
 function caseOfOcc(o){const d=docMap.get(o.d);if(!d)return null;const rows=caseRowsOf(d);if(!rows.length)return {d,reg:d.reg||classifyDoc(d),r:{},unit:'_'};
@@ -1620,7 +1611,7 @@ function renderWatch(){
   $('#watchList').innerHTML=settings.watch.length?settings.watch.map(w=>{const h=watchHits(w);return `<div class="mcard" style="--c:${h.length?'#dc2626':'#94a3b8'}"><div class="mhead"><b>👁️ ${esc(w.text)}</b>${w.note?`<small class="muted">${esc(w.note)}</small>`:''}<span class="mcount" style="background:${h.length?'var(--bad)':'#94a3b8'}">${h.length} ફાઇલ</span><button class="btn sm danger" data-wdel="${w.id}">✕</button></div><div class="mfiles">${h.map(d=>`<span class="fpill" data-doc="${d.id}">${fileIcon(d.ext)} ${esc(d.name)}</span>`).join('')}</div></div>`}).join(''):'<div class="card empty">વોચલિસ્ટ ખાલી છે</div>';
 }
 const SETS=[['keepBlob','મૂળ ફાઇલ પણ સેવ કરો','પછી ડાઉનલોડ / OCR કરી શકાય (30MB સુધી)'],['autoOcrScanned','સ્કેન PDF માં આપમેળે OCR','જે PDF માં લખાણ જ ન હોય (ફોટા જેવી) તેમાં'],['autoOcrGarbled','તૂટેલા ગુજરાતી PDF માં આપમેળે OCR','ધીમું છે પણ નામ વધુ સાચા મળે'],['rowMatch','એક જ Excel ના અલગ રો માં રિપીટ પણ મેચ ગણો',''],['fuzzy','લગભગ સરખા નામ શોધો','સ્પેલિંગ ફેર / વચ્ચેનું નામ અલગ'],['engNames','અંગ્રેજી લખાણમાંથી નામ શોધો','English PDF / Word માટે ચાલુ કરો'],['sound','મેચ મળે ત્યારે અવાજ','']];
-function renderSettings(){try{renderAutoBackupInfo();renderImports();}catch(_){}
+function renderSettings(){
   $('#lockSet').innerHTML=LOGIN_MODE?onlineSettingsHTML():lockSettingsHTML();
   $('#setList').innerHTML=SETS.map(([k,l,s])=>`<div class="setrow"><div>${l}${s?`<small>${s}</small>`:''}</div><label class="sw"><input type="checkbox" data-set="${k}" ${settings[k]?'checked':''}><i></i></label></div>`).join('');
   $('#ignList').innerHTML=settings.ignore.length?settings.ignore.map(k=>{const [t,...r]=k.split('|');const T=TYPES[t]||TYPES.custom;return `<span class="chip" style="--c:${T.color}">${T.icon} ${esc(r.join('|'))}<button class="x" data-unign="${esc(k)}" title="પાછું લાવો">↩</button><button class="x" data-igdel="${esc(k)}" title="કાયમ કાઢો">🗑️</button></span>`}).join('')+`<div style="margin-top:8px"><button class="btn sm danger" data-igdelall="1">🗑️ બધા અવગણેલા કાયમ કાઢો</button></div>`:'<div class="empty">કંઈ અવગણેલું નથી</div>';
@@ -3351,7 +3342,7 @@ $('#phF').addEventListener('click',e=>{const b=e.target.closest('[data-pk]');if(
 
 /* ===================== એપ લૉક (યુઝરનેમ + પાસવર્ડ) ===================== */
 const AUTH={on:false};const isAdmin=()=>true;const hiddenSet=()=>new Set();const can=()=>true;const readOnly=()=>false;function applyPerms(){}function renderAdmin(){}
-const LOCK={cfg:null,open:false,fails:0,until:0,hiddenAt:0,showHint:false,rcShow:''};
+const LOCK={cfg:null,open:false,fails:0,until:0,hiddenAt:0};
 const LOCK_MINS=[[0,'તરત (એપ બહાર જતાં જ)'],[1,'1 મિનિટ'],[5,'5 મિનિટ'],[15,'15 મિનિટ'],[60,'1 કલાક'],[-1,'ક્યારેય નહીં (ફક્ત એપ ફરી ખોલતાં)']];
 function sha256Hex(str){/* crypto.subtle ન હોય ત્યારે માટે */const b=new TextEncoder().encode(str);const K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
   let H=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];const l=b.length;const n=((l+9+63)>>6)<<6;const m=new Uint8Array(n);m.set(b);m[l]=0x80;const dv=new DataView(m.buffer);dv.setUint32(n-4,l*8>>>0);dv.setUint32(n-8,Math.floor(l*8/2**32));
@@ -3364,32 +3355,20 @@ async function lockHash(user,pass,salt,algo){const msg=String(user).trim().toLow
   if(algo==='pbkdf2'&&window.crypto&&crypto.subtle){const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(msg),'PBKDF2',false,['deriveBits']);const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt:new TextEncoder().encode(salt),iterations:150000,hash:'SHA-256'},key,256);return [...new Uint8Array(bits)].map(x=>x.toString(16).padStart(2,'0')).join('');}
   let h=salt+msg;for(let i=0;i<3000;i++)h=sha256Hex(h+salt);return h;}
 const lockAlgo=()=>window.crypto&&crypto.subtle?'pbkdf2':'sha';
-/* રિકવરી કોડ: પાસવર્ડ ભૂલી જાવ તો ડેટા કાઢ્યા વગર નવો યુઝરનેમ-પાસવર્ડ બનાવવા */
-const RC_ALPHA='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-function genRecovery(){const a=new Uint8Array(12);if(window.crypto&&crypto.getRandomValues)crypto.getRandomValues(a);else for(let i=0;i<12;i++)a[i]=Math.floor(Math.random()*256);let t='';a.forEach(x=>t+=RC_ALPHA[x%32]);return t.match(/.{4}/g).join('-');}
-const normRc=t=>String(t||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
-async function rcHashOf(code,salt,algo){return lockHash('recovery',normRc(code),salt,algo);}
-async function lockSaveWithRecovery(cfgBase,code){const rsalt=uid()+uid();const algo=cfgBase.algo||lockAlgo();return lockSave({...cfgBase,rsalt,rh:await rcHashOf(code,rsalt,algo)});}
 async function lockLoad(){try{LOCK.cfg=(await DB.get('kv','applock'))||null;}catch(_){LOCK.cfg=null;}if(!LOCK.cfg){try{LOCK.cfg=JSON.parse(localStorage.getItem('tk_applock')||'null');}catch(_){}}return LOCK.cfg;}
 async function lockSave(c){LOCK.cfg=c;await DB.put('kv',c,'applock').catch(()=>{});try{localStorage.setItem('tk_applock',JSON.stringify(c));}catch(_){}}
 function lockShell(inner){return `<div class="hero-chakra"></div><div class="hero-glow"></div><div class="gate-in"><div class="hero-logo"></div><h1 class="hero-t" style="font-size:clamp(40px,9vw,64px)">ચક્રવ્યુહ</h1><div class="gate-card">${inner}</div><p class="gate-f">🔒 ફક્ત અધિકૃત ઉપયોગ માટે</p></div>`;}
 function showLock(st,msg){const g=$('#authGate');g.classList.remove('hidden');document.body.classList.add('locked');LOCK.open=false;let h='';
   if(st==='loading')h=`<div class="gate-msg">⏳ ખુલી રહ્યું છે…</div>`;
-  else if(st==='setup')h=`<h2>🔐 પહેલી વાર — યુઝરનેમ અને પાસવર્ડ બનાવો</h2><div class="muted" style="font-size:13px;margin-bottom:6px">હવેથી એપ દર વખતે આ યુઝરનેમ અને પાસવર્ડથી જ ખુલશે. પાસવર્ડ ક્યાંક સુરક્ષિત લખી રાખો — ભૂલી જાવ તો સંકેત (Hint) અને રિકવરી કોડથી ડેટા કાઢ્યા વગર નવો પાસવર્ડ બની શકશે — આગળ તમને રિકવરી કોડ મળશે.</div>
-    <input class="inp" id="lsU" autocomplete="username" placeholder="યુઝરનેમ (દા.ત. lcb-rajkot)"><input class="inp" id="lsP" type="password" autocomplete="new-password" placeholder="પાસવર્ડ (ઓછામાં ઓછા 6 અક્ષર)"><input class="inp" id="lsP2" type="password" autocomplete="new-password" placeholder="પાસવર્ડ ફરી લખો"><input class="inp" id="lsH" placeholder="💡 પાસવર્ડનો સંકેત (Hint) — યાદ રહે તેવો, પાસવર્ડ જ ન લખવો" maxlength="80">
+  else if(st==='setup')h=`<h2>🔐 પહેલી વાર — યુઝરનેમ અને પાસવર્ડ બનાવો</h2><div class="muted" style="font-size:13px;margin-bottom:6px">હવેથી એપ દર વખતે આ યુઝરનેમ અને પાસવર્ડથી જ ખુલશે. પાસવર્ડ ક્યાંક સુરક્ષિત લખી રાખો — ભૂલી જશો તો આ ડિવાઇસનો ડેટા કાઢ્યા વગર ખોલી નહીં શકાય.</div>
+    <input class="inp" id="lsU" autocomplete="username" placeholder="યુઝરનેમ (દા.ત. lcb-rajkot)"><input class="inp" id="lsP" type="password" autocomplete="new-password" placeholder="પાસવર્ડ (ઓછામાં ઓછા 6 અક્ષર)"><input class="inp" id="lsP2" type="password" autocomplete="new-password" placeholder="પાસવર્ડ ફરી લખો">
     <label class="gate-show"><input type="checkbox" data-lk="show"> પાસવર્ડ બતાવો</label><button class="btn pri" data-lk="setup">✅ સેવ કરો અને એપ ખોલો</button>${msg?`<div class="gate-err">${esc(msg)}</div>`:''}`;
   else if(st==='lock'){const wait=Math.max(0,Math.ceil((LOCK.until-Date.now())/1000));h=`<h2>🔐 લૉગિન</h2><input class="inp" id="lkU" autocomplete="username" placeholder="યુઝરનેમ"><input class="inp" id="lkP" type="password" autocomplete="current-password" placeholder="પાસવર્ડ">
     <label class="gate-show"><input type="checkbox" data-lk="show"> પાસવર્ડ બતાવો</label><button class="btn pri" data-lk="unlock" ${wait?'disabled':''}>${wait?`⏳ ${wait} સેકન્ડ રાહ જુઓ`:'એપ ખોલો ➜'}</button>
-    <div class="gate-links"><a href="#" data-lk="hint">💡 સંકેત (Hint)</a><a href="#" data-lk="forgot">પાસવર્ડ ભૂલી ગયા?</a></div>${LOCK.showHint?`<div class="gate-msg" style="font-size:14px">💡 ${LOCK.cfg&&LOCK.cfg.hint?esc(LOCK.cfg.hint):'સંકેત સેવ કરેલો નથી'}</div>`:''}${msg?`<div class="gate-err">${esc(msg)}</div>`:''}`;
+    <div class="gate-links"><a href="#" data-lk="forgot">પાસવર્ડ ભૂલી ગયા?</a></div>${msg?`<div class="gate-err">${esc(msg)}</div>`:''}`;
     if(wait)setTimeout(()=>{if(!LOCK.open)showLock('lock',msg);},wait*1000+50);}
-  else if(st==='recovery')h=`<h2>🔑 તમારો રિકવરી કોડ</h2><div class="gate-msg" style="font-size:14px;text-align:left">પાસવર્ડ ભૂલી જાવ તો આ કોડથી <b>ડેટા કાઢ્યા વગર</b> નવો યુઝરનેમ-પાસવર્ડ બનાવી શકશો. <b>આ કોડ કાગળ પર લખી લો અથવા સ્ક્રીનશૉટ લો</b> — ફરી બતાવાશે નહીં.</div>
-    <div style="font:700 24px/1.3 monospace;letter-spacing:2px;text-align:center;background:rgba(255,255,255,.12);border-radius:10px;padding:12px;margin:8px 0;user-select:all">${esc(LOCK.rcShow||'')}</div>
-    <button class="btn" data-lk="rccopy">📋 કૉપી કરો</button><button class="btn pri" data-lk="rcdone">✅ મેં કોડ લખી લીધો — એપ ખોલો</button>`;
-  else if(st==='forgot')h=`<h2>🔑 પાસવર્ડ ભૂલી ગયા</h2><div class="gate-msg" style="font-size:14px;text-align:left"><b>તમારો ડેટા કાઢવામાં નહીં આવે.</b> રિકવરી કોડ અને નવો યુઝરનેમ-પાસવર્ડ લખો.</div>
-    <input class="inp" id="lfC" placeholder="રિકવરી કોડ (XXXX-XXXX-XXXX)" autocapitalize="characters" autocomplete="off"><input class="inp" id="lfU" autocomplete="username" placeholder="નવું યુઝરનેમ"><input class="inp" id="lfP" type="password" autocomplete="new-password" placeholder="નવો પાસવર્ડ (ઓછામાં ઓછા 6 અક્ષર)"><input class="inp" id="lfP2" type="password" autocomplete="new-password" placeholder="નવો પાસવર્ડ ફરી લખો"><input class="inp" id="lfH" placeholder="💡 નવો સંકેત (Hint)" maxlength="80">
-    <label class="gate-show"><input type="checkbox" data-lk="show"> પાસવર્ડ બતાવો</label><button class="btn pri" data-lk="recover">✅ પાસવર્ડ રીસેટ કરો (ડેટા સલામત)</button><button class="btn" data-lk="back">⬅ પાછા — મને યાદ આવી ગયું</button>
-    <details style="margin-top:10px;font-size:13px"><summary style="cursor:pointer">રિકવરી કોડ પણ નથી?</summary><div class="gate-msg" style="font-size:13px;text-align:left;margin-top:6px">છેલ્લો રસ્તો: નવો પાસવર્ડ બનશે, પણ આ ફોનનો ડેટા એપમાંથી કાઢવો પડશે. કાઢતા પહેલાં બધા ડેટાનો <b>બેકઅપ આપમેળે સેવ થશે</b> (Download/Chakravyuh); નવો પાસવર્ડ બનાવ્યા પછી ⚙️ સેટિંગ → બેકઅપ ઇમ્પોર્ટથી ડેટા પાછો લાવી શકાશે.</div>
-    <input class="inp" id="lkDel" placeholder="ખાતરી માટે અહીં  કાઢી નાખો  લખો"><button class="btn danger" data-lk="wipe" style="background:#b91c1c;color:#fff">💾 બેકઅપ લઈ ડેટા કાઢી નવો પાસવર્ડ બનાવો</button></details>${msg?`<div class="gate-err">${esc(msg)}</div>`:''}`;
+  else if(st==='forgot')h=`<h2>⚠️ પાસવર્ડ ભૂલી ગયા</h2><div class="gate-msg" style="font-size:14px;text-align:left">સુરક્ષા માટે પાસવર્ડ ફરી મેળવી શકાતો નથી. આગળ વધવું હોય તો <b>આ ફોન / કમ્પ્યુટરનો બધો ડેટા (કેસ, ફાઇલો, ફોટા) કાઢી નાખવો પડશે</b> અને નવો પાસવર્ડ બનાવવો પડશે. જો બેકઅપ (JSON) હોય તો પછી ⚙️ સેટિંગ → બેકઅપ ઇમ્પોર્ટથી પાછો લાવી શકાશે.</div>
+    <input class="inp" id="lkDel" placeholder="ખાતરી માટે અહીં  કાઢી નાખો  લખો"><button class="btn danger" data-lk="wipe" style="background:#b91c1c;color:#fff">🗑️ બધો ડેટા કાઢી નવો પાસવર્ડ બનાવો</button><button class="btn" data-lk="back">⬅ પાછા — મને યાદ આવી ગયું</button>${msg?`<div class="gate-err">${esc(msg)}</div>`:''}`;
   g.innerHTML=lockShell(h);const f=g.querySelector('input.inp');if(f)setTimeout(()=>f.focus(),60);}
 function unlockApp(){LOCK.open=true;LOCK.fails=0;$('#authGate').classList.add('hidden');document.body.classList.remove('locked');try{sessionStorage.setItem('tk_open','1');}catch(_){}renderAll();}
 function lockNow(){if(LOGIN_MODE){document.querySelectorAll('.ov').forEach(o=>o.close());try{sessionStorage.removeItem('tk_open');}catch(_){}showOnline('login');return;}document.querySelectorAll('.ov').forEach(o=>o.close());try{sessionStorage.removeItem('tk_open');}catch(_){}showLock('lock');}
@@ -3399,32 +3378,18 @@ document.addEventListener('visibilitychange',()=>{if((!LOCK.cfg&&!LOGIN_MODE)||!
 document.addEventListener('click',async e=>{const b=e.target.closest('[data-lk]');if(!b||!b.closest('#authGate'))return;const a=b.dataset.lk;if(a!=='show')e.preventDefault();const v=id=>(document.getElementById(id)?.value||'');
   if(a==='show'){$('#authGate').querySelectorAll('input[type=password],input[data-pw]').forEach(i=>{i.type=b.checked?'text':'password';i.dataset.pw=1;});return;}
   if(a==='setup'){const u=v('lsU').trim(),p=v('lsP'),p2=v('lsP2');if(u.length<3){showLock('setup','યુઝરનેમ ઓછામાં ઓછા 3 અક્ષરનું રાખો');return;}if(p.length<6){showLock('setup','પાસવર્ડ ઓછામાં ઓછા 6 અક્ષરનો રાખો');return;}if(p!==p2){showLock('setup','બંને પાસવર્ડ સરખા નથી');return;}
-    b.disabled=true;b.textContent='⏳…';const salt=uid()+uid();const algo=lockAlgo();const code=genRecovery();await lockSaveWithRecovery({v:2,salt,algo,h:await lockHash(u,p,salt,algo),hint:v('lsH').trim().slice(0,80),autoMin:5,created:Date.now()},code);LOCK.rcShow=code;showLock('recovery');return;}
-  if(a==='rccopy'){try{await navigator.clipboard.writeText(LOCK.rcShow);toast('📋 કૉપી થયો','ok');}catch(_){toast('કૉપી ન થયું — કોડ હાથે લખી લો','err');}return;}
-  if(a==='rcdone'){LOCK.rcShow='';unlockApp();toast('🔐 યુઝરનેમ-પાસવર્ડ સેવ થયો — હવે એપ આનાથી જ ખુલશે','ok',5000);return;}
-  if(a==='hint'){LOCK.showHint=!LOCK.showHint;showLock('lock');return;}
-  if(a==='recover'){const c=LOCK.cfg;if(Date.now()<LOCK.until){showLock('forgot','થોડી રાહ જુઓ');return;}
-    if(!c||!c.rh){showLock('forgot','આ એપમાં રિકવરી કોડ બનાવેલો નથી — નીચે "રિકવરી કોડ પણ નથી?" નો રસ્તો વાપરો');return;}
-    const u=v('lfU').trim(),p=v('lfP');if(u.length<3){showLock('forgot','યુઝરનેમ ઓછામાં ઓછા 3 અક્ષરનું રાખો');return;}if(p.length<6){showLock('forgot','પાસવર્ડ ઓછામાં ઓછા 6 અક્ષરનો રાખો');return;}if(p!==v('lfP2')){showLock('forgot','બંને પાસવર્ડ સરખા નથી');return;}
-    b.disabled=true;b.textContent='⏳…';
-    if((await rcHashOf(v('lfC'),c.rsalt,c.algo))!==c.rh){LOCK.fails++;if(LOCK.fails>=5)LOCK.until=Date.now()+30000*Math.min(10,LOCK.fails-4);showLock('forgot','રિકવરી કોડ ખોટો છે');return;}
-    const salt=uid()+uid();const algo=lockAlgo();const code=genRecovery();
-    await lockSaveWithRecovery({...c,v:2,salt,algo,h:await lockHash(u,p,salt,algo),hint:v('lfH').trim().slice(0,80),changed:Date.now()},code);LOCK.fails=0;LOCK.until=0;LOCK.rcShow=code;showLock('recovery');return;}
+    b.disabled=true;b.textContent='⏳…';const salt=uid()+uid();const algo=lockAlgo();await lockSave({v:1,salt,algo,h:await lockHash(u,p,salt,algo),autoMin:5,created:Date.now()});unlockApp();toast('🔐 યુઝરનેમ-પાસવર્ડ સેવ થયો — હવે એપ આનાથી જ ખુલશે','ok',5000);return;}
   if(a==='unlock'){if(Date.now()<LOCK.until)return;const c=LOCK.cfg;b.disabled=true;b.textContent='⏳…';const ok=(await lockHash(v('lkU'),v('lkP'),c.salt,c.algo))===c.h;
     if(ok){unlockApp();return;}LOCK.fails++;if(LOCK.fails>=5){LOCK.until=Date.now()+30000*Math.min(10,LOCK.fails-4);}showLock('lock',`યુઝરનેમ અથવા પાસવર્ડ ખોટો છે${LOCK.fails>=5?' — ઘણી વાર ખોટું થયું, થોડી રાહ જુઓ':''}`);return;}
   if(a==='forgot'){showLock('forgot');return;}if(a==='back'){showLock('lock');return;}
   if(a==='wipe'){if(v('lkDel').trim()!=='કાઢી નાખો'){showLock('forgot','ખાતરી માટે બરાબર "કાઢી નાખો" લખો');return;}
-    if(docs.length||PH.m.size||(settings.others||[]).length){const t0=settings.lastAutoBackupAt||0;b.disabled=true;b.textContent='⏳ બેકઅપ બની રહ્યો છે…';await autoBackup(true);if((settings.lastAutoBackupAt||0)===t0){showLock('forgot','બેકઅપ બની શક્યો નહીં — સલામતી માટે ડેટા કાઢ્યો નથી');return;}}
     docs=[];docMap.clear();memBlobs.clear();compactCache.clear();caseCache.clear();for(const s of ['docs','blobs','photos','kv'])await DB.clear(s).catch(()=>{});PH.m.clear();PH.idx=null;
-    try{['tk_applock','tk_open','tk_cm_seen'].forEach(k=>localStorage.removeItem(k));}catch(_){}settings.credReset38=1;settings.autoBackup=true;await DB.put('kv',settings,'settings').catch(()=>{});LOCK.cfg=null;LOCK.fails=0;LOCK.until=0;buildIndex();showLock('setup','આ ડિવાઇસનો ડેટા કાઢી નાખ્યો — નવો યુઝરનેમ અને પાસવર્ડ બનાવો');}});
+    try{['tk_applock','tk_open','tk_cm_seen'].forEach(k=>localStorage.removeItem(k));}catch(_){}LOCK.cfg=null;LOCK.fails=0;LOCK.until=0;buildIndex();showLock('setup','આ ડિવાઇસનો ડેટા કાઢી નાખ્યો — નવો યુઝરનેમ અને પાસવર્ડ બનાવો');}});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.closest&&e.target.closest('#authGate')){const b=document.querySelector('#authGate .btn.pri');if(b&&!b.disabled)b.click();}});
 function lockSettingsHTML(){const c=LOCK.cfg||{};return `<div class="row gap" style="margin-top:0"><label class="muted" style="font-size:13.5px">⏱️ એપ બહાર જાય પછી આપમેળે લૉક: <select class="inp" id="lkAuto">${LOCK_MINS.map(([m,l])=>`<option value="${m}" ${(c.autoMin??5)===m?'selected':''}>${l}</option>`).join('')}</select></label></div>
   <div class="pgrid" style="margin-top:8px"><label class="pf"><span>હાલનું યુઝરનેમ</span><input class="inp" id="lkOldU" autocomplete="username"></label><label class="pf"><span>હાલનો પાસવર્ડ</span><input class="inp" id="lkOld" type="password" autocomplete="current-password"></label><label class="pf"><span>નવું યુઝરનેમ</span><input class="inp" id="lkNU" autocomplete="username" placeholder="એ જ રાખવું હોય તો ફરી લખો"></label><label class="pf"><span>નવો પાસવર્ડ (6+ અક્ષર)</span><input class="inp" id="lkNP" type="password" autocomplete="new-password"></label><label class="pf"><span>નવો પાસવર્ડ ફરી</span><input class="inp" id="lkNP2" type="password" autocomplete="new-password"></label></div>
-  <div class="pgrid" style="margin-top:8px"><label class="pf"><span>💡 પાસવર્ડનો સંકેત (Hint)</span><input class="inp" id="lkHint" maxlength="80" value="${esc(c.hint||'')}"></label></div>
-  <div class="row gap"><button class="btn" id="lkHintSave">💡 સંકેત સેવ કરો</button><button class="btn" id="lkRcNew">🔑 નવો રિકવરી કોડ બનાવો</button></div>
-  <p class="muted" style="font-size:12.5px;margin:4px 0">સંકેત / રિકવરી કોડ બદલવા ઉપર "હાલનું યુઝરનેમ" અને "હાલનો પાસવર્ડ" ભરવા જરૂરી છે. ${c.rh?'✅ રિકવરી કોડ બનેલો છે.':'⚠️ રિકવરી કોડ હજી બનાવ્યો નથી — બનાવી લો.'}</p>
   <div class="row gap"><button class="btn pri" id="lkChg">💾 યુઝરનેમ / પાસવર્ડ બદલો</button><button class="btn" id="lkNowB">🔒 હમણાં લૉક કરો</button></div>
-  <p class="muted" style="font-size:12.5px;margin-bottom:0">⚠️ આ લૉક એપ ખોલતાં અટકાવે છે. પાસવર્ડ ભૂલી જાવ તો સંકેત (Hint) અને રિકવરી કોડથી ડેટા કાઢ્યા વગર રીસેટ થશે. રિકવરી કોડ સલામત જગ્યાએ લખી રાખો.</p>`;}
+  <p class="muted" style="font-size:12.5px;margin-bottom:0">⚠️ આ લૉક એપ ખોલતાં અટકાવે છે. પાસવર્ડ ભૂલી જશો તો આ ડિવાઇસનો ડેટા કાઢ્યા વગર ખોલી નહીં શકાય — સમયાંતરે 💾 બેકઅપ લેતા રહો.</p>`;}
 
 /* ===================== ઓનલાઇન એકાઉન્ટ (ઇમેઇલ + પાસવર્ડ, બધે એક જ ડેટા) ===================== */
 const ONL={user:null,first:false,busy:false};
@@ -3574,11 +3539,7 @@ function updInit(){
 }
 $('#lockBtn').onclick=lockNow;
 $('#lockSet').addEventListener('change',async e=>{if(e.target.id==='lkAuto'&&LOGIN_MODE){settings.autoLockMin=+e.target.value;DB.put('kv',settings,'settings').catch(()=>{});toast('સેવ થયું','ok');return;}if(e.target.id==='lkAuto'&&LOCK.cfg){LOCK.cfg.autoMin=+e.target.value;await lockSave(LOCK.cfg);toast('સેવ થયું','ok');}});
-$('#lockSet').addEventListener('click',async e=>{if(e.target.id==='lkNowB'){lockNow();return;}if(e.target.id==='olOut'){onlineLogout();return;}if(e.target.id==='olReset'){try{await firebase.auth().sendPasswordResetEmail(ONL.user.email);toast('📧 '+ONL.user.email+' પર પાસવર્ડ બદલવાની લિંક મોકલી','ok',7000);}catch(err){toast(fbMsg(err),'err');}return;}const v=id=>(document.getElementById(id)?.value||'');
-  if((e.target.id==='lkHintSave'||e.target.id==='lkRcNew')&&LOCK.cfg){const c0=LOCK.cfg;if((await lockHash(v('lkOldU'),v('lkOld'),c0.salt,c0.algo))!==c0.h){toast('હાલનું યુઝરનેમ અને પાસવર્ડ ઉપર ભરો','err');return;}
-    if(e.target.id==='lkHintSave'){await lockSave({...c0,hint:v('lkHint').trim().slice(0,80)});toast('💡 સંકેત સેવ થયો','ok');return;}
-    const code=genRecovery();await lockSaveWithRecovery({...c0,v:2},code);LOCK.rcShow=code;renderSettings();alert('🔑 તમારો નવો રિકવરી કોડ:\n\n'+code+'\n\nઆ કોડ કાગળ પર લખી લો. જૂનો કોડ હવે ચાલશે નહીં.');LOCK.rcShow='';return;}
-  if(e.target.id!=='lkChg'||!LOCK.cfg)return;const c=LOCK.cfg;
+$('#lockSet').addEventListener('click',async e=>{if(e.target.id==='lkNowB'){lockNow();return;}if(e.target.id==='olOut'){onlineLogout();return;}if(e.target.id==='olReset'){try{await firebase.auth().sendPasswordResetEmail(ONL.user.email);toast('📧 '+ONL.user.email+' પર પાસવર્ડ બદલવાની લિંક મોકલી','ok',7000);}catch(err){toast(fbMsg(err),'err');}return;}if(e.target.id!=='lkChg'||!LOCK.cfg)return;const v=id=>(document.getElementById(id)?.value||'');const c=LOCK.cfg;
   if((await lockHash(v('lkOldU'),v('lkOld'),c.salt,c.algo))!==c.h){toast('હાલનું યુઝરનેમ અથવા પાસવર્ડ ખોટો છે','err');return;}
   const u=v('lkNU').trim()||v('lkOldU').trim(),p=v('lkNP')||v('lkOld');if(u.length<3){toast('યુઝરનેમ ઓછામાં ઓછા 3 અક્ષર','err');return;}if(v('lkNP')&&p.length<6){toast('પાસવર્ડ ઓછામાં ઓછા 6 અક્ષર','err');return;}if(v('lkNP')!==v('lkNP2')){toast('નવા બંને પાસવર્ડ સરખા નથી','err');return;}
   const salt=uid()+uid();const algo=lockAlgo();await lockSave({...c,salt,algo,h:await lockHash(u,p,salt,algo),changed:Date.now()});renderSettings();toast('🔐 યુઝરનેમ / પાસવર્ડ બદલાયો','ok',5000);});
@@ -3711,49 +3672,13 @@ document.addEventListener('click',async e=>{const t=e.target;const g1=t.closest(
 $('#ignList').onclick=e=>{const b=e.target.closest('[data-unign]');if(b){settings.ignore=settings.ignore.filter(k=>k!==b.dataset.unign);saveSettings();buildIndex();renderAll();renderSettings();}};
 $('#bExp').onclick=async()=>{const photos=[];for(const p of PH.m.values()){const b=await DB.get('blobs','ph_'+p.id).catch(()=>null);photos.push({...p,data:b?await blobToDataURL(b):''});}
   download(`chakravyuh-backup-${new Date().toISOString().slice(0,10)}.json`,new Blob([JSON.stringify({app:'chakravyuh',v:4,exported:Date.now(),settings,docs,photos})],{type:'application/json'}));};
-$('#bImp').onchange=async e=>{const files=[...e.target.files];e.target.value='';if(!files.length)return;
-  const typed=($('#bImpLabel').value||'').trim();let tn=0,tp=0,to=0;settings.imports=settings.imports||[];
-  for(const f of files){
-    try{const j=JSON.parse(await f.text());if(!['data-milan','tapas-kadi','chakravyuh','vyuhrachna'].includes(j.app))throw new Error('આ ચક્રવ્યુહનો બેકઅપ નથી');
-      const label=(typed||String(f.name||'બીજો ફોન').replace(/\.json$/i,'').replace(/^chakravyuh-(auto)?backup-?/i,'')||'બીજો ફોન').slice(0,40);
-      let n=0,np=0,no=0;
-      for(const d of j.docs||[]){if(docMap.has(d.id))continue;d.srcPhone=label;docs.push(d);docMap.set(d.id,d);await saveDoc(d);n++;}
-      for(const p of (j.photos||[])){if(PH.m.has(p.id))continue;const {data,...meta}=p;meta.srcPhone=label;await phSave(meta,data?dataURLToBlob(data):null);np++;}if(np)PH.changed();
-      if(j.settings&&Array.isArray(j.settings.others)){settings.others=settings.others||[];const oi=new Set(settings.others.map(o=>o.id));j.settings.others.forEach(o=>{if(!oi.has(o.id)){o.srcPhone=label;settings.others.push(o);no++;}});}
-      if(j.settings){settings.ignore=[...new Set([...(settings.ignore||[]),...(j.settings.ignore||[])])];settings.watch=settings.watch||[];const ids=new Set(settings.watch.map(w=>w.id));(j.settings.watch||[]).forEach(w=>{if(!ids.has(w.id))settings.watch.push(w)});}
-      settings.imports.push({label,at:Date.now(),docs:n,photos:np,others:no});tn+=n;tp+=np;to+=no;
-    }catch(err){toast('ઇમ્પોર્ટ ભૂલ ('+f.name+'): '+err.message,'err',6000);}}
-  await saveSettings();buildIndex();renderAll();renderImports();$('#bImpLabel').value='';
-  toast(`📱 બીજા ફોનનો ડેટા ઉમેર્યો: ${tn} ફાઇલ, ${tp} ફોટા, ${to} અન્ય વ્યક્તિ`,'ok',6000);};
-function renderImports(){const el=$('#impList');if(!el)return;const L=settings.imports||[];
-  el.innerHTML=L.length?'<small class="muted">ઉમેરેલા ફોન:</small>'+L.slice().reverse().map(x=>`<div style="font-size:13px;margin-top:3px">📱 <b>${esc(x.label)}</b> — ${x.docs} ફાઇલ, ${x.photos||0} ફોટા, ${x.others||0} વ્યક્તિ <small class="muted">(${fmtDate(x.at)})</small></div>`).join(''):'';}
-/* ===================== ઓટો બેકઅપ (રોજ રાત્રે ૧૨:૦૦) ===================== */
-const abKey=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
-async function buildBackupJSON(withPhotos){const photos=[];if(withPhotos)for(const p of PH.m.values()){const b=await DB.get('blobs','ph_'+p.id).catch(()=>null);photos.push({...p,data:b?await blobToDataURL(b):''});}
-  return JSON.stringify({app:'chakravyuh',v:4,exported:Date.now(),settings,docs,photos});}
-let abBusy=false;
-function renderAutoBackupInfo(){const c=$('#abOn');if(!c)return;c.checked=settings.autoBackup!==false;const i=$('#abInfo');if(!i)return;
-  const where=window.AndroidApp?'ફોનના Download/Chakravyuh ફોલ્ડરમાં':'આ બ્રાઉઝરમાં (સેટિંગ → બેકઅપ ડાઉનલોડ પણ કરો)';
-  i.textContent=(settings.lastAutoBackupAt?`છેલ્લો ઓટો બેકઅપ: ${fmtDate(settings.lastAutoBackupAt)} ${new Date(settings.lastAutoBackupAt).toLocaleTimeString('gu-IN',{hour:'2-digit',minute:'2-digit'})} — `:'હજી ઓટો બેકઅપ બન્યો નથી — ')+where+'. એપ રાત્રે ખુલ્લી ન હોય તો સવારે એપ ખોલતાં જ ગઈ રાતનો બેકઅપ બની જશે.';}
-async function autoBackup(force){
-  if(abBusy)return;if(settings.autoBackup===false&&!force)return;const k=abKey();if(!force&&settings.lastAutoBackup===k)return;
-  if(!force&&!docs.length&&!(settings.others||[]).length&&!PH.m.size)return;
-  abBusy=true;
-  try{
-    let json=await buildBackupJSON(true);if(json.length>60e6)json=await buildBackupJSON(false);
-    const blob=new Blob([json],{type:'application/json'});const name=`chakravyuh-autobackup-${k}.json`;
-    if(window.AndroidApp&&AndroidApp.saveBase64){const r=AndroidApp.saveBase64(name,'application/json',await b64OfBlob(blob));if(r!=='ok')throw new Error(r);}
-    else if(force){download(name,blob);}
-    else{await DB.put('kv',{k,at:Date.now(),json:await buildBackupJSON(false)},'autobackup');}
-    settings.lastAutoBackup=k;settings.lastAutoBackupAt=Date.now();await DB.put('kv',settings,'settings').catch(()=>{});
-    renderAutoBackupInfo();toast('💾 ઓટો બેકઅપ બની ગયો'+(window.AndroidApp?' (Download/Chakravyuh)':''),'ok',4000);
-  }catch(err){console.warn('autobackup',err);toast('ઓટો બેકઅપ ન બન્યો: '+err.message,'err',6000);}
-  finally{abBusy=false;}}
-let abTimer=null;
-function abSchedule(){clearTimeout(abTimer);const n=new Date();const next=new Date(n.getFullYear(),n.getMonth(),n.getDate()+1,0,0,10);abTimer=setTimeout(()=>{autoBackup();abSchedule();},Math.max(1000,next-n));}
-document.addEventListener('visibilitychange',()=>{if(!document.hidden){autoBackup();abSchedule();}});
-document.addEventListener('change',e=>{if(e.target&&e.target.id==='abOn'){settings.autoBackup=e.target.checked;DB.put('kv',settings,'settings').catch(()=>{});toast(e.target.checked?'🌙 ઓટો બેકઅપ ચાલુ':'ઓટો બેકઅપ બંધ','ok');}});
-document.addEventListener('click',e=>{if(e.target&&e.target.id==='abNow')autoBackup(true);});
+$('#bImp').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
+  try{const j=JSON.parse(await f.text());if(!['data-milan','tapas-kadi','chakravyuh','vyuhrachna'].includes(j.app))throw new Error('આ ચક્રવ્યુહનો બેકઅપ નથી');let n=0;
+    for(const d of j.docs||[]){if(docMap.has(d.id))continue;docs.push(d);docMap.set(d.id,d);await saveDoc(d);n++;}
+    let np=0;for(const p of (j.photos||[])){if(PH.m.has(p.id))continue;const {data,...meta}=p;await phSave(meta,data?dataURLToBlob(data):null);np++;}if(np){PH.changed();toast(`${np} ફોટા ઇમ્પોર્ટ થયા`,'ok');}
+    if(j.settings&&Array.isArray(j.settings.others)){settings.others=settings.others||[];const oi=new Set(settings.others.map(o=>o.id));j.settings.others.forEach(o=>{if(!oi.has(o.id))settings.others.push(o);});}
+    if(j.settings){settings.ignore=[...new Set([...settings.ignore,...(j.settings.ignore||[])])];const ids=new Set(settings.watch.map(w=>w.id));(j.settings.watch||[]).forEach(w=>{if(!ids.has(w.id))settings.watch.push(w)});saveSettings();}
+    buildIndex();renderAll();toast(`${n} ફાઇલ ઇમ્પોર્ટ થઈ`,'ok');}catch(err){toast('ઇમ્પોર્ટ ભૂલ: '+err.message,'err');}};
 $('#bClear').onclick=async()=>{if(!confirm('બધી ફાઇલો અને માહિતી કાયમ માટે કાઢી નાખવી છે?'))return;if(!confirm('ખરેખર? પહેલાં બેકઅપ લીધો છે?'))return;
   if(SYNC.on&&confirm('ઓનલાઇન (બધા માટે) પણ કાઢી નાખવું છે?'))for(const d of docs)syncDelete(d.id);
   docs=[];docMap.clear();memBlobs.clear();compactCache.clear();await DB.clear('docs').catch(()=>{});await DB.clear('blobs').catch(()=>{});await DB.clear('photos').catch(()=>{});for(const id of PH.m.keys())syncPhotoDelete(id);PH.m.clear();PH.idx=null;settings.others=[];saveSettings();buildIndex();renderAll();toast('બધો ડેટા કાઢી નાખ્યો','ok');};
@@ -3801,7 +3726,6 @@ document.body.classList.add('home');
   handleShareTarget();
   updInit();
   await lockInit();
-  renderAutoBackupInfo();renderImports();setTimeout(()=>{autoBackup();},4000);abSchedule();
   if(settings.syncOn||(SHARED_CONFIG.firebase&&SHARED_CONFIG.team))syncStart();
   if(!window.pdfjsLib||!window.XLSX||!window.mammoth)toast('⚠️ અમુક લાઇબ્રેરી લોડ ન થઈ — ઇન્ટરનેટ ચાલુ રાખીને પેજ ફરી ખોલો','err',8000);
 })();
