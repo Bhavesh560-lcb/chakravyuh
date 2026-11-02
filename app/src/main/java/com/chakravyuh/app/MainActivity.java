@@ -210,6 +210,18 @@ public class MainActivity extends Activity {
         }
         String tab = i.getStringExtra("openTab");
         if (tab != null) pendingTab = tab;
+        if ("update".equals(tab)) installReadyApk();
+    }
+
+    /** અપડેટ નોટિફિકેશન દબાવતાં: પહેલેથી ડાઉનલોડ થયેલી નવી APK સીધી ઇન્સ્ટોલ માટે ખોલો */
+    private void installReadyApk() {
+        try {
+            int ready = Updater.prefs(this).getInt("apkReady", 0);
+            File f = new File(new File(getCacheDir(), "share"), "chakravyuh-update.apk");
+            if (ready > Updater.bundledVersion(this) && f.isFile()) {
+                handler.postDelayed(() -> launchInstall(f), 600);
+            }
+        } catch (Exception ignored) {}
     }
 
     @Override

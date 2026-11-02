@@ -114,6 +114,22 @@ public final class Updater {
         prefs(c).edit().putInt("updVersion", ver).putInt("curVersion", ver).apply();
     }
 
+    /** નવી APK પાછળ (background) માં ડાઉનલોડ કરી રાખો — નોટિફિકેશન દબાવતાં સીધી ઇન્સ્ટોલ થાય */
+    static void downloadApk(Context c, String apkUrl, int ver) throws Exception {
+        byte[] data = get(apkUrl);
+        if (data.length < 1000000) throw new Exception("apk small");
+        File dir = new File(c.getCacheDir(), "share");
+        if (!dir.exists()) dir.mkdirs();
+        File f = new File(dir, "chakravyuh-update.apk");
+        File tmp = new File(dir, "chakravyuh-update.tmp");
+        try (FileOutputStream fo = new FileOutputStream(tmp)) {
+            fo.write(data);
+        }
+        if (f.exists()) f.delete();
+        if (!tmp.renameTo(f)) throw new Exception("rename apk");
+        prefs(c).edit().putInt("apkReady", ver).apply();
+    }
+
     static void setInfo(Context c, String url, int cur) {
         prefs(c).edit().putString("url", base(url)).putInt("curVersion", cur).apply();
         schedule(c);
@@ -122,8 +138,8 @@ public final class Updater {
     static void schedule(Context c) {
         try {
             Constraints cons = new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build();
-            PeriodicWorkRequest req = new PeriodicWorkRequest.Builder(UpdateWorker.class, 2, TimeUnit.HOURS).setConstraints(cons).build();
-            WorkManager.getInstance(c).enqueueUniquePeriodicWork("vyuh_update_check", ExistingPeriodicWorkPolicy.KEEP, req);
+            PeriodicWorkRequest req = new PeriodicWorkRequest.Builder(UpdateWorker.class, 15, TimeUnit.MINUTES).setConstraints(cons).build();
+            WorkManager.getInstance(c).enqueueUniquePeriodicWork("vyuh_update_check", ExistingPeriodicWorkPolicy.UPDATE, req);
         } catch (Exception ignored) {}
     }
 }
