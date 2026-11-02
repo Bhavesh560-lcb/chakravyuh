@@ -1,8 +1,8 @@
 {
-  "version": 3,
+  "version": 5,
   "force": false,
   "notes": [
-    "નવો લોગો • એપ બહાર જતાં લૉગઆઉટ નહીં થાય"
+    "SMS ફોર્મેટ: તમે લખેલું ફોર્મેટ જ વપરાશે"
   ],
   "files": [
     "index.html",
@@ -11,5 +11,5 @@
   ],
   "apkMin": 0,
   "apkUrl": "https://github.com/Bhavesh560-lcb/chakravyuh/releases/download/apk-latest/chakravyuh.apk",
-  "apk": true
+  "apk": false
 }
